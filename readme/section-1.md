@@ -130,6 +130,41 @@ expect(elementsArray).toHaveLength(7);
 
 ### Jest Watch Mode
 
-- Watch 모드는 Jest를 실행하는 방법으로 마지막 커밋 이후 파일의 모든 변경 사항을 확인해서 마지막 커밋 이후 변경된 파일과 연관된 테스트만 실행한다.
-- 첫 번째 npm test를 실행했을 때 마지막 커밋 이후 변경된 파일이 없다면 모든 테스트를 실행하도록 하기 전에는 어떤 테스트도 실행되지 않는다.
+- Watch 모드는 `Jest를 실행하는 방법`으로 마지막 커밋 이후 파일의 모든 변경 사항을 확인해서 마지막 커밋 이후 변경된 파일과 연관된 테스트만 실행한다.
+- `npm test`를 실행했을 때 마지막 커밋 이후 변경된 파일이 없다면 어떤 테스트도 실행되지 않는다. 단, 그래도 테스트를 실행하고 싶다면 `a` 문자를 입력하면 된다.
+
+```
+No tests found related to files changed since last commit.
+Press `a` to run all tests, or run Jest with `--watchAll`.
+```
+
 - 파일이 변경되면 Jest에서 파일을 확인하다가 테스트와 관련된 변경 사항을 확인하고 테스트를 다시 실행한다.
+
+<br />
+
+### Jest 원리
+
+```js
+test("renders learn react link", () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+```
+
+- Jest는 테스트 통과나 실패는 어떻게 아는 것일까?
+- `test()`라는 2개의 인수를 가질 수 있는 전역 테스트 메서드가 있다.
+  - 첫 번째 인수는 `테스트의 문자열 설명`이며, Jest에서 보통 1개 이상의 테스트를 진행하는데 이때 이 인수를 사용해서 테스트를 실패했을 때 어떤 테스트에 실패했는지 알려준다. 위 예제에서는 `renders learn react link` 문자열을 의미한다.
+  - 두 번째 인수는 `테스트 함수`이다. Jest는 테스트의 성공과 실패를 결정하기 위해 이 함수를 실행한다.
+- 테스트는 테스트 함수를 실행할 때 `에러가 발생`하면 실패하게 된다. 그리고 단언(assert)는 `테스트 결과 예상이 틀렸을 때 에러가 발생시키고 테스트를 실패`하도록 한다.
+- 테스트 함수에 에러가 없으면 테스트에 통과한다. 그렇기 때문에 `빈 테스트도 테스트는 통과`돼야 한다.
+
+```js
+// 테스트 통과
+test("renders learn react link", () => {});
+
+// 테스트 실패
+test("renders learn react link", () => {
+  throw new Error("test failed");
+});
+```
