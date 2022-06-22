@@ -1,6 +1,6 @@
 # 💻 Section 1 - 소개
 
-## 🧑‍💻 App.test.js 분석
+## 🧑‍💻 기본 App.test.js 분석
 
 ```js
 // App.js
@@ -39,12 +39,12 @@ test("renders learn react link", () => {
 ```
 
 - 테스트 함수에서 첫 번째로 `render` 메서드를 실행한다.
-  - render 메서드는 인수로 제공하는 JSX에 관한 가상 DOM을 생성한다. 여기서 JSX에 관한 인수는 app 컴포넌트이다.
+  - render 메서드는 인수로 제공하는 `JSX에 관한 가상 DOM을 생성`한다. 여기서 JSX에 관한 인수는 App 컴포넌트이다.
 - 랜더링된 가상 DOM에는 `screen global object`로 액세스 한다.
 - render 메서드, screen 객체 모두 `@testing-library/react` 에서 가져온다.
 - 그 다음 `screen.getByText`라는 메서드를 실행하고 표시되는 모든 텍스트를 기반으로 DOM에서 요소를 찾는다.
 - 현재 getByText 메서드의 인수는 `정규 표현식`이다. 정규표현식을 따로 다루지는 않지만 위 예제에서는 `learn react`라는 문자열이고 대소문자를 구분하지 않는 것을 의미한다. 따라서 그냥 문자열로 넣어도 상관은 없다.
-- 마지막으로 `expect` 메서드가 사용된 부분은 단언이다. `단언(Assertion)`은 테스트 성공과 실패의 원인이다. 복잡하면서 굉장히 중요하다. 이는 추후에 알아보도록 하자.
+- 마지막으로 `expect` 메서드가 사용된 부분은 단언이다. `단언(Assertion)`은 테스트 성공과 실패의 원인이다. 복잡하면서 굉장히 중요하다. 이는 밑에서 다시 알아보도록 하자.
 
 <br />
 
@@ -58,6 +58,54 @@ test("renders learn react link", () => {
 });
 ```
 
-- 만약 위에처럼 getByText의 인자를 `react testing library`로 바꾼다면 테스트는 실패해야 한다. 실제로 npm test를 실행해서 jest watch 모드에서 확인해보면 실패하는 것을 확인할 수 있다.
+- 만약 위에처럼 getByText의 인자를 `react testing library`로 바꾼다면 테스트는 실패해야 한다. 실제로 `npm test`를 실행해서 `jest watch 모드`에서 확인해보면 실패하는 것을 확인할 수 있다.
+
+<br />
+
+## 🧑‍💻 Jest 단언(assert)
+
+- `단언(assert)`는 테스트의 통과 여부를 결정한다. 따라서 테스트 함수의 핵심 부분이다.
+
+```js
+expect(linkElement).toBeInTheDocument();
+```
+
+- Jest에서 전역 메서드인 `expect()` 메서드로 시작한다. 그리고 인수가 있는데 인수는 단언이 단언하는 것으로 예측에 들어맞는지 확인하기 위해 Jest에서 확인하는 것이다.
+- `toBeInTheDocument()`는 Jest DOM에서 온 일종의 `매처(matcher)`인데 이것이 단언의 유형이다.
+- matcher에는 종종 인수가 있는데 toBeInTheDocument는 인수를 가지지 않는다. toBeInTheDocument는 요소가 문서에 있거나 없는 거를 의미한다.
+  - 가끔 요소를 개수와 같은 것과도 비교하는데 이때 인수를 확인할 수 있다. ex) `toHaveLength(7)`
+
+<br />
+
+### 비슷한 패턴의 단언 예제
+
+```js
+expect(element.textContent).toBe("hello");
+```
+
+- 시작은 언제나 expect로 시작한다. 대상은 `element.textContent`이다. 여기서 요소는 이전 줄에서 정의했다고 가정하고, `screen` 메서드 중 하나로 페이지에서 요소를 찾을 것이다.
+- matcher는 간단하게 `toBe()`를 사용했다.
+- 위 테스트 코드의 의미는 `텍스트 콘텐츠 요소(textContent)`를 `hello`로 예상하는 것이다.
+
+<br />
+
+```js
+expect(elementsArray).toHaveLength(7);
+```
+
+- `elementsArray`는 이전 줄에서 정의했다고 가정하고, `toHaveLength`라는 matcher가 있다. toHaveLength는 인수가 `7`이다.
+- 위 테스크 코드의 의미는 `배열 요소의 길이를 7로 예상`하는 것이다.
+
+<br />
+
+## 🧑‍💻 jset-dom
+
+<img width="120" alt="스크린샷 2022-06-22 오후 3 07 23" src="https://user-images.githubusercontent.com/64779472/174955532-1ec61d0c-b5d4-4965-9505-7469a4948037.png">
+
+- `jest-dom`은 CRA와 함께 설치된다.
+- `setupTests.js` 파일을 사용해 각 테스트 전에 `jest-dom`을 가져온다. 즉, 그렇기에 모든 테스트에서 `jest-dom matcher`를 사용할 수 있는 것이다.
+- 위 단언 예제에서 살펴본 matcher인 `toBe`와 `toHaveLength`는 일반적인 matcher이다. 즉, `모든 노드 코드에 적용`할 수 있다.
+- 그에 반해, `toBeInTheDocument()`처럼 `DOM 기반의 matcher`는 `가상 DOM에서만 적용`할 수 있다.
+- 그외에도 DOM에서 볼 수 있는 `toBeVisible()`과 체크박스 같은 `toBeChecked()` 등이 있다.
 
 <br />
