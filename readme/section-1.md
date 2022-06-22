@@ -98,7 +98,7 @@ expect(elementsArray).toHaveLength(7);
 
 <br />
 
-## 🧑‍💻 jset-dom
+## 🧑‍💻 jest-dom
 
 <img width="120" alt="스크린샷 2022-06-22 오후 3 07 23" src="https://user-images.githubusercontent.com/64779472/174955532-1ec61d0c-b5d4-4965-9505-7469a4948037.png">
 
@@ -109,3 +109,27 @@ expect(elementsArray).toHaveLength(7);
 - 그외에도 DOM에서 볼 수 있는 `toBeVisible()`과 체크박스 같은 `toBeChecked()` 등이 있다.
 
 <br />
+
+## 🧑‍💻 Jest
+
+- 리액트 테스팅 라이브러리(RTL)는 테스트 컴포넌트를 가상 DOM으로 렌더링하는데 도움이 된다. (이는 render를 통해 알아봤다.) 또한, 가상 DOM을 검색하는데도 도움이 된다.(이는 getByText 메서드를 통해 알아봤다.) 그리고 아직은 사용하지는 않았지만 곧 가상 DOM과 상호 작용하는 것에도 도움이 된다.
+- 하지만 테스트 러너가 필요하다. 테스트를 찾고 실행하며 assert(단언)할 무언가가 필요하다. 이때 Jest를 사용한다.
+- 테스트 러너에는 Jest뿐만 아니라 Mocha나 Jasmin 등도 있지만 RTL에서는 Jest를 권장하고 CRA와 함께 제공한다.
+- 그래서 터미널에서 npm test를 실행했을 때 CRA에서 제공하는 npm script를 실행했고 그 스크립트가 Jest를 Watch 모드로 실행되게 한 것이다.
+
+```json
+{
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  }
+}
+```
+
+### Jest Watch Mode
+
+- Watch 모드는 Jest를 실행하는 방법으로 마지막 커밋 이후 파일의 모든 변경 사항을 확인해서 마지막 커밋 이후 변경된 파일과 연관된 테스트만 실행한다.
+- 첫 번째 npm test를 실행했을 때 마지막 커밋 이후 변경된 파일이 없다면 모든 테스트를 실행하도록 하기 전에는 어떤 테스트도 실행되지 않는다.
+- 파일이 변경되면 Jest에서 파일을 확인하다가 테스트와 관련된 변경 사항을 확인하고 테스트를 다시 실행한다.
