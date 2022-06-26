@@ -256,3 +256,103 @@ test("renders learn react link", () => {
 - 위에서도 이야기 했지만 결국 기능에 초점을 맞춘 테스트 방식은 신뢰도를 높임과 동시에 코드 리팩토링 시 테스트 코드 수정 빈도를 줄일 수 있습니다.
 
 <br />
+
+## 🧑‍💻 테스트 라이브러리와 접근성
+
+- RTL은 우리의 웹사이트가 어떻게 사용되는지 최대한 가깝게 테스트를 작성할 수 있도록 장려하는 메서드와 유틸리티를 제공한다.
+- 테스트 할 때 실제 사용자가 쓰는 것처럼 해야 하는데 여기에 `스크린 리더`와 같은 `접근성 인터페이스`도 포함된다.
+- 아래 사이트를 살펴보면 가상 DOM에서 요소를 찾을 때 어떤 쿼리를 우선순위로 사용해야 하는지 알려준다.
+  - [요소 우선순위](https://testing-library.com/docs/queries/about/#priority)
+
+<br />
+
+### 가상 DOM 요소 찾을 때 우선순위
+
+1. 누구나 액세스 가능한 쿼리(Queris Accessible to Everyone)
+
+- 첫 번째 우선순위는 `누구나 액세스 가능한 쿼리(Queris Accessible to Everyone)`이다. 이는 마우스를 사용하고 있고 화면을 시각적으로 보고 있으며 보조 기술을 사용하는 사람이면 액세스 가능한 쿼리이다.
+
+  - getByRole: element는 문서에서 `역할`을 가지는데 `button` 같은 역할이다. `페이지에서 요소의 역할을 식별`하는 것이다.
+  - getByLabelText: `label의 텍스트 값`으로, label과 연결된 input 태그를 찾아준다. 그래서 input과 연결되지 않은 label의 text를 사용하면 요소를 찾지 못한다.
+  - getByPlaceholderText: `placeholder 값`으로 input 또는 textarea를 찾는다.
+  - getByText: 요소가 가진 `text 값`으로 요소를 찾는다.
+  - getByDisplayValue: input의 form 요소(input, textarea, select)의 `현재 값`을 기준으로 요소를 찾는다.
+
+<br />
+
+2. 시맨틱 쿼리(Semantic)
+
+- 두 번째는 위에 있는 query중에 어떠한 것도 사용할 수 있으면 시맨틱 쿼리를 사용한다.
+  - getByAltText: 이미지의 `alt 속성의 값`으로 요소를 찾습니다.
+  - getByTitle: `title 속성의 값`으로 요소를 찾습니다.
+
+<br />
+
+3. 테스트 ID(Test IDs)
+
+- 세 번째는 테스트 아이디로 쿼리에 관한 `최후 수단`이다. 최후의 수단인 이유는 사용자가 직접 볼 수도 없고 스크린 리더도 액세스 할 수 없어서 꼭 필요한 경우에만 사용해야 하기 때문이다.
+  - getByTestId: 요소에 `testid 속성 값`을 부여해서 요소를 찾는 방법입니다. 이 방법은 위의 쿼리로 요소를 찾기 힘든 경우에 최후의 수단으로 사용한다.
+
+<br />
+
+### App.test.js 개선
+
+- CRA를 하고 App.tes.js를 보면 getByText를 사용한다.
+
+```js
+import { render, screen } from "@testing-library/react";
+import App from "./App";
+
+test("renders learn react link", () => {
+  render(<App />);
+  const linkElement = screen.getByText(/learn react/i);
+  expect(linkElement).toBeInTheDocument();
+});
+```
+
+- 위 예제에서 non-interactive 요소에 첫 번째로 `getByText`를 선택했지만 아래 App.js 코드를 보면 테스트에서 찾으려는 요소는 `상호 작용하는 요소인 링크(a태그)`이다.
+
+```jsx
+function App() {
+  return (
+    <div className="App">
+      {/* .. */}
+      <a
+        className="App-link"
+        href="https://reactjs.org"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Learn React
+      </a>
+    </div>
+  );
+}
+```
+
+<br />
+
+- 위 예제를 `getByRole`로 업데이트 해보자. (아래 예제 참고)
+- getByRole을 사용할 때 `첫 번째 인수는 역할 자체`이다. 그리고 a태그는 링크라는 내장된 역할이 있고, 몇 가지 옵션이 존재한다.
+- 옵션에 관해서 우선 아래 예제에서는 `name을 사용해서 표시돼야 할 텍스트를 식별`하도록 했다.
+
+```js
+import { render, screen } from "@testing-library/react";
+import App from "./App";
+
+test("renders learn react link", () => {
+  render(<App />);
+  const linkElement = screen.getByRole("link", { name: /learn react/i });
+  expect(linkElement).toBeInTheDocument();
+});
+```
+
+- 위에 예제처럼 텍스트만 사용해서 요소를 찾는 대신 실제 `역할`로도 요소를 찾을 수 있다. 실제 역할을 사용해서 스크린 리더에서 요소를 액세스할 수 있도록 했다.
+- 그런데 어떤 역할을 찾아야 하는지 어떻게 알 수 있을까? 아래 링크에서 (Definition of Roles 5.4 섹션) 역할의 정의에대해서 알아볼 수 있다.
+  - [역할의 정의](https://www.w3.org/TR/wai-aria/#role_definitions)
+- 역할 속성을 사용해서 div처럼 모든 요소에 역할을 추가할 수 있다. 코드에는 단순히 `role=""`처럼 큰따옴표로 역할을 묶으면 된다.
+- 또한, 일부 요소는 역할이 내장되어 있다. 예를 들어 button 요소는 자동으로 `button` 역할을 갖으며, a태그는 자동으로 `link`역할을 갖는다.
+- 역할로 작업하는 것에 익숙하지 않으면 역할과 접근성에 적응하는데 시간이 조금 걸린다.
+- 일반적으로 스크린 리더에서 테스트 요소를 찾을 수 없으면 그건 우리의 앱이 스크린 리더에 친화적이지 않은 거고 접근성에서 안좋다는 의미이다.
+
+<br />
