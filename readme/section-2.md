@@ -199,3 +199,56 @@ function App() {
 <br />
 
 ## 🧑‍💻 Color Button(3) - 인수(Acceptance) 테스트
+
+- TDD에대해 알아야 할게 앱이 가동중인 걸 볼 수 없다는 것이다. 예외적으로 인수(Acceptance)테스트를 실행하는 경우 빼고 말이다.
+- 인수 테스트는 앱을 `사용자 스토리(시나리오)`에 맞춰 수행하는 테스트이다.
+- 리액트에서 인수 테스트는 간단한다. yarn start로 앱을 가동시키고 `시나리오 또는 요구사항 명세`대로 테스트 해보는 것이다.
+
+<br />
+
+## 🧑‍💻 Color Button(4) - 버튼, 체크박스 초기 조건 테스트
+
+- 지금까지 Color Button 앱에서 체크박스를 추가해보자. 요구사항은 다음과 같다.
+  - 체크박스가 on일 경우에는 버튼이 비활성화되고, off가되면 버튼이 활성화되게 만드는 것이다.
+- 그전에 버튼과 체크박스의 초기 상태부터 체크하는 테스트 코드를 작성해보자. 체크박스는 `초기에 off 상태`이고, 버튼은 `활성화` 상태여야 한다.
+
+<br />
+
+- 첫 번째로, 버튼의 활성화 여부는 jest-dom의 matcher중에 `toBeEnabled()`를 사용해서 초기 상태를 테스트한다.
+- 두 번째로, 체크박스도 getByRole()을 이용해서 역할로 Element를 찾아야되는데 이때 `checkbox`라는 역할이 존재하기 때문에 이를 사용한다.
+- 세 번째로, 찾은 체크박스가 체크되지(off) 않은 상태로 시작하길 원하기 때문에 이는 matcher중에 `toBeChecked()`를 이용한다.
+  - 이때 toBeUnchecked()는 존재하지 않는데 toBeChecked()를 부정하려면 앞에 `not`을 붙이면 된다.
+
+```js
+// App.test.js
+test("initial conditions", () => {
+  render(<App />);
+
+  // check that the button starts out enabled
+  const colorButton = screen.getByRole("button", { name: "Change to blue" });
+  expect(colorButton).toBeEnabled(); // (1)
+
+  // check that the checkbox starts out unchecked
+  const checkbox = screen.getByRole("checkbox"); // (2)
+  expect(checkbox).not.toBeChecked(); // (3)
+});
+```
+
+- 이대로 테스트를 실행하면 당연히 실패할 것이고, 테스트를 통과시키기 위해 App 컴포넌트를 수정하자.
+- 수정하고 테스트를 확인해보면 무사히 버튼과 체크박스의 초기 상태 테스트는 통과되는 것을 확인할 수 있다.
+
+```jsx
+function App() {
+  const [buttonColor, setButtonColor] = useState("red");
+  const newButtonColor = buttonColor === "red" ? "blue" : "red";
+
+  return (
+    <div>
+      {/* ...button */ }
+      <input type="checkbox">
+    </div>
+  );
+}
+```
+
+<br />

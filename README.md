@@ -12,8 +12,9 @@
   - 유닛 테스트 vs 기능 테스트
   - 테스트 접근성
 - [Section 2 - Color Button](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-2.md)
-  - Color Button - 첫 레드/그린 테스트
-  - Color Button - 기능(functional) 테스트(with. 클릭 이벤트)
-  - Color Button - 인수(Acceptance) 테스트
+  - Color Button(1) - 첫 레드/그린 테스트
+  - Color Button(2) - 기능(functional) 테스트(with. 클릭 이벤트)
+  - Color Button(3) - 인수(Acceptance) 테스트
+  - Color Button(4) - 버튼, 체크박스 초기 조건 테스트
 
 <br />
