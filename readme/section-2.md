@@ -151,7 +151,7 @@ test("button turns blue when clicked", () => {
 ```js
 import { render, screen, fireEvent } from "@testing-library/react"; // (1)
 
-test("button has correct initial color", () => {
+test("버튼 클릭을 통한 배경색 및 텍스트 변화 테스트", () => {
   render(<App />);
   const colorButton = screen.getByRole("button", { name: "Change to blue" });
 
@@ -221,7 +221,7 @@ function App() {
 
 ```js
 // App.test.js
-test("initial conditions", () => {
+test("버튼, 체크박스 초기 상태 테스트", () => {
   render(<App />);
 
   // check that the button starts out enabled
@@ -252,3 +252,65 @@ function App() {
 ```
 
 <br />
+
+## 🧑‍💻 Color Button(5) - 체크박스 기능 추가(퀴즈 풀이)
+
+- 요구사항: 체크박스의 체크가 on되면 버튼이 비활성화되게 해라
+- 가이드)
+  - `fiveEvent.click` 사용
+  - `toBeEnabled`와 그 반대 matcher인 `toBeDisabled()` 사용
+  - 새로운 테스트를 생성해서 작성
+
+```js
+// App.test.js
+test("체크박스를 2번 클릭하는 동안 버튼 활성화 및 체크박스 체크 유무 테스트", () => {
+  render(<App />);
+  const colorButton = screen.getByRole("button", { name: "Change to blue" });
+  const checkbox = screen.getByRole("checkbox");
+
+  // click checkbox
+  fireEvent.click(checkbox);
+
+  expect(colorButton).toBeDisabled();
+  expect(checkbox).toBeChecked();
+
+  // click checkbox
+  fireEvent.click(checkbox);
+
+  expect(colorButton).toBeEnabled();
+  expect(checkbox).not.toBeChecked();
+});
+```
+
+<br />
+
+```jsx
+function App() {
+  const [buttonColor, setButtonColor] = useState("red");
+  const [disabled, setDisabled] = useState(false); // (*)
+  const newButtonColor = buttonColor === "red" ? "blue" : "red";
+
+  return (
+    <div>
+      <button
+        style={{ backgroundColor: buttonColor, color: "#fff" }}
+        onClick={() => setButtonColor(newButtonColor)}
+        disabled={disabled} // (*)
+      >
+        Change to {newButtonColor}
+      </button>
+      <input
+        type="checkbox"
+        id="enable-button-checkbox" // (*) label을 위한 id 지정
+        checked={disabled} // (*)
+        aria-checked={disabled} // (*) 웹 접근성을 위한 속성
+        onChange={(e) => setDisabled(e.target.checked)} // (*)
+      />
+    </div>
+  );
+}
+```
+
+<br />
+
+## 🧑‍💻 Color Button(6) - 라벨이 있는 체크박스 찾기
