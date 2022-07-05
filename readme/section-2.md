@@ -367,4 +367,67 @@ test("체크박스를 2번 클릭하는 동안 버튼 활성화 및 체크박스
 
 <br />
 
-## 🧑‍💻 Color Button(7) - 비활성화된 버튼 회색으로 봐꾸기
+## 🧑‍💻 Color Button(7) - 비활성화된 버튼 회색으로 봐꾸기(퀴즈 풀이)
+
+- 요구사항: 버튼이 비활성화되었을 때 이를 시각적으로 확인할 수 있으면 좋겠다. 즉 버튼 색깔을 회색으로 바꾸자.
+- 가이드)
+  - 테스트 플로우
+    1. 체크박스 클릭 -> 버튼 비활성화 -> 버튼 색깔(회색) -> 체크박스 클릭 -> 버튼 활성화 -> 버튼 색깔(빨강)
+    2. 버튼 클릭 -> 버튼 색깔(파랑) -> 체크박스 클릭 -> 버튼 비활성화 -> 버튼 색깔(회색) -> 체크박스 클릭 -> 버튼 색깔(파랑)
+  - 테스트 플로우가 2개이기 때문에 2개의 테스트 코드를 추가 작성
+
+```js
+// App.test.js
+test("비활성화 버튼의 색깔은 회색이고, 활성화되면 빨간색으로 돌아온다.", () => {
+  render(<App />);
+  const colorButton = screen.getByRole("button", { name: "Change to blue" });
+  const checkbox = screen.getByRole("checkbox", { name: "Disable button" });
+
+  fireEvent.click(checkbox);
+  expect(colorButton).toHaveStyle({ backgroundColor: "gray" });
+
+  fireEvent.click(checkbox);
+  expect(colorButton).toHaveStyle({ backgroundColor: "red" });
+});
+
+test("버튼을 클릭하면 버튼은 파란색이고, 비활성화하면 회색이다. 다시 활성화하면 파란색으로 돌아온다.", () => {
+  render(<App />);
+  const colorButton = screen.getByRole("button", { name: "Change to blue" });
+  const checkbox = screen.getByRole("checkbox", { name: "Disable button" });
+
+  fireEvent.click(colorButton);
+  expect(colorButton).toHaveStyle({ backgroundColor: "blue" });
+
+  fireEvent.click(checkbox);
+  expect(colorButton).toHaveStyle({ backgroundColor: "gray" });
+
+  fireEvent.click(checkbox);
+  expect(colorButton).toHaveStyle({ backgroundColor: "blue" });
+});
+```
+
+<br />
+
+```js
+// App.js
+function App() {
+  // ...
+
+  return (
+    <div>
+      <button
+        // (*)
+        style={{
+          backgroundColor: disabled ? "gray" : buttonColor,
+          color: "#fff",
+        }}
+        onClick={() => setButtonColor(newButtonColor)}
+        disabled={disabled}
+      >
+        Change to {newButtonColor}
+      </button>
+      // ...
+    </div>
+  );
+}
+```

@@ -9,7 +9,10 @@ function App() {
   return (
     <div>
       <button
-        style={{ backgroundColor: buttonColor, color: "#fff" }}
+        style={{
+          backgroundColor: disabled ? "gray" : buttonColor,
+          color: "#fff",
+        }}
         onClick={() => setButtonColor(newButtonColor)}
         disabled={disabled}
       >
