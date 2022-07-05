@@ -16,8 +16,6 @@ function App() {
 export default App;
 ```
 
-<br />
-
 ```js
 // App.test.js
 import { render, screen } from "@testing-library/react";
@@ -27,6 +25,8 @@ test("button has correct initial color", () => {});
 
 test("button turns blue when clicked", () => {});
 ```
+
+<br />
 
 - 이제 테스트 진행을 위해서 테스트 방식을 작성해야 한다.
 - 첫 번째로 작성해야 되는 것은 `render()`이다. 이 경우에는 렌더링해야 하는게 `App 컴포넌트`로 명확하다.
@@ -38,6 +38,8 @@ test("button turns blue when clicked", () => {});
   - [(jset-dom)](https://github.com/testing-library/jest-dom) 해당 사이트에서 `사용자 정의 매처(Matcher)`를 확인할 수 있다.
   - 아래 예제에서는 `toHaveStyle()`을 이용해서 버튼의 배경색이 빨간색인지 확인하고 있다.
   - 참고로 모든 `단언`이 그렇듯이 `expect()`를 사용해야 한다.
+
+<br />
 
 ```js
 // App.test.js
@@ -56,15 +58,23 @@ test("button has correct initial color", () => {
 test("button turns blue when clicked", () => {});
 ```
 
+<br />
+
 - 이 상태로 콘솔로 `yarn test`를 통해서 테스트를 실행하면 결과는 실패가 뜨고 아래와 같은 실패 메시지가 나온다.
 - 해석해보면 button 역할과 Change to blue 라는 name에 액세스 가능한 요소를 찾을 수 없다는 내용이다.
+
+<br />
 
 ```
   TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Change to blue"
 ```
 
+<br />
+
 - 여기까지 `레드-그린 테스트` 방식의 레드 테스트를 마친 것이다. 그렇다면 이제 App.js에서 실패한 테스트를 해결해보도록 하자.
 - 아래 예제와 같이 App.js를 수정 하고 다시 테스트를 실행해보면 이제는 제대로 테스트가 통과하는 것을 확인할 수 있다.
+
+<br />
 
 ```js
 // App.js
@@ -96,11 +106,11 @@ test("button has correct initial color", () => {
 });
 ```
 
-<br />
-
 ```
 TestingLibraryElementError: Unable to find an accessible element with the role "butt" and name "Change to blue"
 ```
+
+<br />
 
 - 하지만 RTL은 아래와 같이 친절하게 `존재하는 역할이 무엇이 있는지 알려준다.` 그렇기에 존재하지 않는 역할을 넣는다면 테스팅 라이브러리의 출력 값은 오류를 찾는데 굉장히 유용하다.
 
@@ -124,6 +134,8 @@ Name "Change to blue":
 - 두 번째로 `클릭하고 싶은 요소`를 찾아야 한다. 첫 번째 테스트("button has correct initial color") 때와 마찬가지로 `getByRole()`을 통해 찾는다.
   - 여기서 여담으로 현재 App 컴포넌트에는 사실 버튼 엘리먼트가 하나이다. 따라서 getByRole의 두 번째 파라미터인 옵션의 `name`은 사실 없어도 되는 옵션이다. 하지만 name을 붙여 주는 편이 좋은 습관이고, 연습에도 도움이 된다.
 
+<br />
+
 ```js
 //App.test.js
 // ...
@@ -133,6 +145,8 @@ test("button turns blue when clicked", () => {
   const colorButton = screen.getByRole("but", { name: "Change to blue" }); // (2)
 });
 ```
+
+<br />
 
 - 여기까지 진행했을 때 의문점은 첫 번째 테스트("button has correct initial color")때와 같은 코드 두 줄이 반복된다는 것이다. 꼭 분리된 테스트가 좋은걸까?
   - `유닛(Unit)테스트`의 경우 좀 더 엄격히 분리된 테스팅을 할 때는 테스트 하나에 하나의 단언만 나오는 것을 선호한다.
@@ -147,6 +161,8 @@ test("button turns blue when clicked", () => {
 - 세 번째로, 버튼을 클릭되면 어떻게 되는지를 추가적으로 단언(assert)을 작성한다.
 - 네 번째로, 우리는 버튼을 클릭하면 텍스트도 변경되야하기 때문에 이 역시 추가적인 단언(assert)을 작성한다.
   - 이떄 `textContent 프로퍼티`와 `toBe()`를 이용할 수 있다.
+
+<br />
 
 ```js
 import { render, screen, fireEvent } from "@testing-library/react"; // (1)
@@ -169,9 +185,13 @@ test("버튼 클릭을 통한 배경색 및 텍스트 변화 테스트", () => {
 });
 ```
 
+<br />
+
 - 여기까지 작성하고 테스트를 실행해보면 당연히 테스트는 실패한다. 아직 실제 App 컴포넌트에 코드를 작성하지 않았기 때문이다. App 컴포넌트에서 코드를 추가해보자.
 - 참고로 테스트를 실행했는데 에러가 발생하고 예측이 실패했을 때, 에러를 발생시킨 단언 이후의 테스트는 실행하지 않는다. 그런 이유로 테스트마다 하나의 단언을 두는게 바람직 한 것이다.
 - 그럼에도 불구하고 `기능 테스트를 할 때는 하나의 단언만 사용하는 것이 실용적이지 않다.` 이유는 간단한 텍스트 콘텐츠를 테스트하기 위해 전체 설정(render, getByRole 등)을 반복해서 작성하는 것은 비효율적이기 때문이다.
+
+<br />
 
 ```js
 // App.js
@@ -234,8 +254,12 @@ test("버튼, 체크박스 초기 상태 테스트", () => {
 });
 ```
 
+<br />
+
 - 이대로 테스트를 실행하면 당연히 실패할 것이고, 테스트를 통과시키기 위해 App 컴포넌트를 수정하자.
 - 수정하고 테스트를 확인해보면 무사히 버튼과 체크박스의 초기 상태 테스트는 통과되는 것을 확인할 수 있다.
+
+<br />
 
 ```jsx
 function App() {
@@ -282,9 +306,9 @@ test("체크박스를 2번 클릭하는 동안 버튼 활성화 및 체크박스
 });
 ```
 
-<br />
-
 ```jsx
+// App.js
+
 function App() {
   const [buttonColor, setButtonColor] = useState("red");
   const [disabled, setDisabled] = useState(false); // (*)
@@ -314,3 +338,33 @@ function App() {
 <br />
 
 ## 🧑‍💻 Color Button(6) - 라벨이 있는 체크박스 찾기
+
+- 라벨이 있는 체크박스 찾을 때는 `getByRole()`의 두 번째 인자의 `name 옵션`을 통해 찾을 수 있다.
+- 그리고 App 컴포넌트에서 label 태그를 추가하면 된다. 이때 `htmlFor 속성의 값은 연결시킬 input의 id와 맞춰주면 된다.`
+
+```js
+test("체크박스를 2번 클릭하는 동안 버튼 활성화 및 체크박스 체크 유무 테스트", () => {
+  render(<App />);
+  const colorButton = screen.getByRole("button", { name: "Change to blue" });
+  const checkbox = screen.getByRole("checkbox", { name: "Disable button" }); // (*)
+  // assert...
+});
+```
+
+```jsx
+<div>
+  // ...
+  <input
+    type="checkbox"
+    id="enable-button-checkbox"
+    checked={disabled}
+    aria-checked={disabled}
+    onChange={(e) => setDisabled(e.target.checked)}
+  />
+  <label htmlFor="enable-button-checkbox">Disable button</label>
+</div>
+```
+
+<br />
+
+## 🧑‍💻 Color Button(7) - 비활성화된 버튼 회색으로 봐꾸기

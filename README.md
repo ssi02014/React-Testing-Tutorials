@@ -21,5 +21,6 @@
   - Color Button(4) - 버튼, 체크박스 초기 조건 테스트
   - Color Button(5) - 체크박스 기능 추가(퀴즈 풀이)
   - Color Button(6) - 라벨이 있는 체크박스 찾기
+  - Color Button(7) - 비활성화된 버튼 회색으로 봐꾸기(퀴즈 풀이)
 
 <br />

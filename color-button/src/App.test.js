@@ -33,7 +33,7 @@ test("버튼, 체크박스 초기 상태 테스트", () => {
 test("체크박스를 2번 클릭하는 동안 버튼 활성화 및 체크박스 체크 유무 테스트", () => {
   render(<App />);
   const colorButton = screen.getByRole("button", { name: "Change to blue" });
-  const checkbox = screen.getByRole("checkbox");
+  const checkbox = screen.getByRole("checkbox", { name: "Disable button" });
 
   // click checkbox
   fireEvent.click(checkbox);
