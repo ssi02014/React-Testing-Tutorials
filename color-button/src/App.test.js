@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import App from "./App";
+import { replaceCamelWithSpace } from "./App";
 
 test("버튼 클릭을 통한 배경색 및 텍스트 변화 테스트", () => {
   render(<App />);
@@ -74,3 +75,20 @@ test("버튼을 클릭하면 버튼은 파란색이고, 비활성화하면 회�
   fireEvent.click(checkbox);
   expect(colorButton).toHaveStyle({ backgroundColor: "blue" });
 });
+
+describe("카멜 케이스의 경우 대문자 앞의 공백을 띄운다", () => {
+  test("Works for no inner capital letters", () => {
+    expect(replaceCamelWithSpace("Red")).toBe("Red");
+  });
+
+  test("Works for one inner capital letters", () => {
+    expect(replaceCamelWithSpace("MidnightBlue")).toBe("Midnight Blue");
+  });
+
+  test("Works for mulitple inner capital letters", () => {
+    expect(replaceCamelWithSpace("MediumVioletRed")).toBe("Medium Violet Red");
+  });
+});
+
+// MediumVioletRed
+// MidnightBlue

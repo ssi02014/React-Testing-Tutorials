@@ -431,3 +431,58 @@ function App() {
   );
 }
 ```
+
+## 🧑‍💻 Color Button(8) - 유닛(Unit)테스팅 함수
+
+- 리액트 앱에서는 종종 `컴포넌트로부터 분리되어 있는 함수`를 발견할 수 있다. 이는 함수가 다수의 컴포넌트에 의해 사용이 되고 있기 때문일 수 있다. (예를 들어 유틸함수) 혹은 로직이 다소 복잡하기 때문에 컴포넌트 자체의 논리로부터 분리를 해야 하는 상황일 수도 있다.
+- 유닛 테스트를 권장하는 상황은 다음과 같다.
+  - 1. 기능 테스트를 통해 테스트를 하기에는 로직이 너무 복잡한 경우
+  - 2. 엣지 케이스가 너무 많은 경우이다.
+- 사실 지금 Color Button 프로젝트에서 유닛 테스트가 필요한 함수가 포함되어 있지 않다. 그래도 함수의 유닛 테스트의 개념과 원리를 살펴보자.
+
+<br />
+
+- 현재 유닛 테스트를 해볼 함수는 만약 우리가 색상으로 카멜케이스를 인자로 넣었을 경우 대문자마다 앞에 공백을 추가하는 함수(`replaceCamelWithSpace`)를 추가하고 테스트해보자.
+- 그리고 이번 섹션에서 새로운 개념을 사용하는데 바로 `describe()`이다. describe는 테스트를 그룹화할 때 사용한다.
+
+<br />
+
+- describe()는 두 번째 인자로 콜백 함수를 갖는다. 그리고 그 콜백 함수 내부에 테스트 전역을 입력할 수 있다.
+- 참고로, 어떤 특정 DOM을 불러오는 것이 아니고 특정 함수만을 테스트하기 때문에 바로 단언(assery) 를 작성해주면 된다.
+
+```js
+// App.test.js
+import { replaceCamelWithSpace } from "./App";
+
+describe("카멜 케이스의 경우 대문자 앞의 공백을 띄운다", () => {
+  test("Works for no inner capital letters", () => {
+    expect(replaceCamelWithSpace("Red")).toBe("Red");
+  });
+
+  test("Works for one inner capital letters", () => {
+    expect(replaceCamelWithSpace("MidnightBlue")).toBe("Midnight Blue");
+  });
+
+  test("Works for mulitple inner capital letters", () => {
+    expect(replaceCamelWithSpace("MediumVioletRed")).toBe("Medium Violet Red");
+  });
+});
+```
+
+<br />
+
+- 이제 App 컴포넌트에서 replaceCamelWithSpace를 작성해주자. 참고로 함수 내부에서 정규표현식을 사용했다.
+- 작성한(`/\B([A-Z])\B/g`) 정규표현식이 의미하는 내용은 문자열에서 대문자를 만나면 또는 다수의 대문자를 만나면 매번 작업을 한다는 것을 의미한다.
+
+<br />
+
+```js
+// App
+export function replaceCamelWithSpace(colorName) {
+  return colorName.replace(/\B([A-Z])\B/g, " $1");
+}
+```
+
+- 위와 같이 작성하고 테스트를 돌려보면 제대로 테스트가 통과하는 것을 확인할 수 있다.
+
+<br />
