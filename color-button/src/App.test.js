@@ -99,6 +99,3 @@ describe("카멜 케이스의 경우 대문자 앞의 공백을 띄운다", () =
     expect(replaceCamelWithSpace("MediumVioletRed")).toBe("Medium Violet Red");
   });
 });
-
-// MediumVioletRed
-// MidnightBlue
