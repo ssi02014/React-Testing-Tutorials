@@ -22,5 +22,8 @@
   - Color Button(5) - 체크박스 기능 추가(퀴즈 풀이)
   - Color Button(6) - 라벨이 있는 체크박스 찾기
   - Color Button(7) - 비활성화된 버튼 회색으로 봐꾸기(퀴즈 풀이)
+  - Color Button(8) - 함수 유닛(Unit)테스트
+  - Color Button(9) - 스펙 변경을 통한 코드 수정
+  - Color Button(10) - 유닛 테스트를 하는 경우(추가 설명)
 
 <br />
