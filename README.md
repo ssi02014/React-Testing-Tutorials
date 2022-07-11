@@ -33,3 +33,8 @@
   - Color Button(10) - 유닛 테스트를 하는 경우(추가 설명)
 
 <br />
+
+- [Section 3 - ESLint 설정](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-3.md)
+  - ESLint 설정
+
+<br />
