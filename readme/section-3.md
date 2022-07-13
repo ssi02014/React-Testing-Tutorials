@@ -1,6 +1,6 @@
 # 💻 Section 2 - ESLint 설정
 
-- 프로젝트에 테스트 라이브러리 및 jest-dom에 대한 ESLint 셋팅에 대해서 알아보자.
+- 프로젝트에 테스트 라이브러리 및 jest-dom에 대한 ESLint 셋팅에 대해서 알아보자. Prettier는 생략한다.
 
 <br />
 
