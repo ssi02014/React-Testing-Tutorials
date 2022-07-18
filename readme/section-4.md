@@ -46,10 +46,10 @@
 
 <br />
 
-## 🧑‍💻 Sundaes on Demand(2) - 스타일링(react-bootstrap)
+## 🧑‍💻 Sundaes on Demand(2) - 스타일링 셋팅(react-bootstrap)
 
 - 테스트 과정에 있어, 스타일링이 별로 중요하지 않다 생각할 수도 있지만, 사실 제법 중요하다. 왜냐하면, 페이지 상에 나타난 요소의 모습을 바탕으로 요소를 찾게 될 텐데 이는 사용된 스타일링에 의해 달라지게 되기 때문이다.
-- 해당 프로젝트에서는 react-bootstrap을 사용해서 [react-bootstrap](https://react-bootstrap.github.io/) 사이트에 요소가 어떻게 구현되었는지 확인하면서, 효율적으로 요소를 찾아내 테스트 할 수 있도록 할 것이다.
+- 해당 프로젝트에서는 `react-bootstrap`을 사용해서 [react-bootstrap](https://react-bootstrap.github.io/) 사이트에 요소가 어떻게 구현되었는지 확인하면서, 효율적으로 요소를 찾아내 테스트 할 수 있도록 할 것이다.
 
 <br />
 
@@ -82,3 +82,18 @@ yarn add react-bootstrap bootstrap
 - 그리고 CSS를 index.js에다 import 추가해줘야 한다. 관련 설명은 [react-bootstrap: css](https://react-bootstrap.github.io/getting-started/introduction#css)에서 참고하면 된다.
 
 <br />
+
+## 🧑‍💻 Sundaes on Demand(3) - SummaryForm 구조
+
+### 폴더 구조
+
+<img width="346" alt="스크린샷 2022-07-18 오후 11 50 53" src="https://user-images.githubusercontent.com/64779472/179538796-913a01f3-80a5-412e-b322-fe1c57e339da.png">
+
+<br />
+
+- 컴포넌트를 페이지 별로 구성한다. 이 각각의 페이지 디렉토리에는 테스트 서브디렉토리가 존재한다. 그 안에 테스트 코드가 포함된다.
+- Jest는 프로젝트 전체 디렉토리 트리 내의 `.test.js`로 끝나는 모든 파일을 찾아 실행하기 때문에 테스트 파일이 어디에있든 상관은 없지만 따로 디렉토리로 정리했다.
+
+<br />
+
+## 🧑‍💻 Sundaes on Demand(4) - SummaryForm: 체크박스 활성화 버튼
