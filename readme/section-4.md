@@ -1,6 +1,6 @@
 # 💻 Section 4 - Sundaes on Demand
 
-## Sundaes on Demand(1) - App 개요
+## 🧑‍💻 Sundaes on Demand(1) - App 개요
 
 - Sundaes on Demand 프로젝트에서 클라이언트와 서버가 기본적으로 `상호작용` 하는 방식은 아래와 같다.
   - 기본적으로 사람들이 아이스크림의 맛과 토핑을 선택한 뒤, 주문을 제출한다.
@@ -43,5 +43,42 @@
 - 주문 번호의 경우에는 무작위의 번호를 임의로 생성해 전송한다.
 - 사실 Sundaes on Demand는 기능 테스트를 위해 서버는 필요가 없다. 위에서도 언급했지만 MSW를 이용해 테스트 서버로부터 MOCK 응답을 보낼 것이기 때문이다.
 - 그렇다면 서버가 왜 필요하냐, 서버는 스펙을 위해서만 사용을 해서 MSW가 반환해야 하는 내용을 확인할 거고, 수동 인수(Acceptance) 테스트 용으로 사용할 것이다.
+
+<br />
+
+## 🧑‍💻 Sundaes on Demand(2) - 스타일링(react-bootstrap)
+
+- 테스트 과정에 있어, 스타일링이 별로 중요하지 않다 생각할 수도 있지만, 사실 제법 중요하다. 왜냐하면, 페이지 상에 나타난 요소의 모습을 바탕으로 요소를 찾게 될 텐데 이는 사용된 스타일링에 의해 달라지게 되기 때문이다.
+- 해당 프로젝트에서는 react-bootstrap을 사용해서 [react-bootstrap](https://react-bootstrap.github.io/) 사이트에 요소가 어떻게 구현되었는지 확인하면서, 효율적으로 요소를 찾아내 테스트 할 수 있도록 할 것이다.
+
+<br />
+
+```
+설치
+yarn add react-bootstrap bootstrap
+```
+
+<br />
+
+- 라이브러리 설치 후에 index.html에다 추가적인 JavaScript 링크를 추가한다.
+- 아래 내용들은 index.html에다 붙여넣으면 된다. 관련 설명은 [react-bootstrap: browser-globals](https://react-bootstrap.github.io/getting-started/introduction#browser-globals)에서 참고하면 된다.
+
+<br />
+
+```js
+<script src="https://unpkg.com/react/umd/react.production.min.js" crossorigin></script>
+
+<script
+  src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"
+  crossorigin></script>
+
+<script
+  src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js"
+  crossorigin></script>
+```
+
+<br />
+
+- 그리고 CSS를 index.js에다 import 추가해줘야 한다. 관련 설명은 [react-bootstrap: css](https://react-bootstrap.github.io/getting-started/introduction#css)에서 참고하면 된다.
 
 <br />
