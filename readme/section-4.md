@@ -105,5 +105,49 @@ yarn add react-bootstrap bootstrap
 
 ## 🧑‍💻 Sundaes on Demand(4) - SummaryForm: 체크박스 활성화 버튼
 
+### 요구사항
+
 - 기본값으로 체크박스에 체크가 되어 있지 않도록 한다.
 - 체크박스에 체크를 하면 버튼이 활성화되게 한다. 그리고 체크를 해제하면 버튼이 다시 비활성화된다.
+  - toBeEnabled, toBeDisabled 활용
+
+<br />
+
+- 실제 작성된 [SummaryForm.js](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/sundaes-on-demand-client/src/pages/summary/SummaryForm.js) 코드는 직접 확인
+
+```js
+// App.test.js
+import { render, fireEvent, screen } from "@testing-library/react";
+import SummaryForm from "../SummaryForm";
+
+test("초기 상태 테스트", () => {
+  render(<SummaryForm />);
+
+  const confirmButton = screen.getByRole("button", {
+    name: /confirm order/i,
+  });
+  const checkBox = screen.getByRole("checkbox", {
+    name: /terms and conditions/i,
+  });
+
+  expect(checkBox).not.toBeChecked();
+  expect(confirmButton).toBeDisabled();
+});
+
+test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해제하면 버튼은 활성화된다.", () => {
+  render(<SummaryForm />);
+
+  const confirmButton = screen.getByRole("button", {
+    name: /confirm order/i,
+  });
+  const checkBox = screen.getByRole("checkbox", {
+    name: /terms and conditions/i,
+  });
+
+  fireEvent.click(checkBox);
+  expect(confirmButton).toBeEnabled();
+
+  fireEvent.click(checkBox);
+  expect(confirmButton).toBeDisabled();
+});
+```

@@ -12,7 +12,7 @@ test("초기 상태 테스트", () => {
   });
 
   expect(checkBox).not.toBeChecked();
-  expect(confirmButton).toBeEnabled();
+  expect(confirmButton).toBeDisabled();
 });
 
 test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해제하면 버튼은 활성화된다.", () => {
@@ -26,8 +26,8 @@ test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해�
   });
 
   fireEvent.click(checkBox);
-  expect(confirmButton).toBeDisabled();
+  expect(confirmButton).toBeEnabled();
 
   fireEvent.click(checkBox);
-  expect(confirmButton).toBeEnabled();
+  expect(confirmButton).toBeDisabled();
 });
