@@ -96,7 +96,6 @@ yarn add react-bootstrap bootstrap
 <img width="346" alt="스크린샷 2022-07-18 오후 11 50 53" src="https://user-images.githubusercontent.com/64779472/179538796-913a01f3-80a5-412e-b322-fe1c57e339da.png">
 
 <br />
-<br />
 
 - 컴포넌트를 페이지 별로 구성한다. 이 각각의 페이지 디렉토리에는 테스트 서브디렉토리가 존재한다. 그 안에 테스트 코드가 포함된다.
 - Jest는 프로젝트 전체 디렉토리 트리 내의 `.test.js`로 끝나는 모든 파일을 찾아 실행하기 때문에 테스트 파일이 어디에있든 상관은 없지만 따로 디렉토리로 정리했다.
