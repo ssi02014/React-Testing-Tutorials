@@ -85,10 +85,17 @@ yarn add react-bootstrap bootstrap
 
 ## 🧑‍💻 Sundaes on Demand(3) - SummaryForm 구조
 
+### 목업 디자인
+
+![스크린샷 2022-07-19 오전 12 34 51](https://user-images.githubusercontent.com/64779472/179548063-74cecf24-b930-4617-b0cd-232ec2cff739.png)
+
+<br />
+
 ### 폴더 구조
 
 <img width="346" alt="스크린샷 2022-07-18 오후 11 50 53" src="https://user-images.githubusercontent.com/64779472/179538796-913a01f3-80a5-412e-b322-fe1c57e339da.png">
 
+<br />
 <br />
 
 - 컴포넌트를 페이지 별로 구성한다. 이 각각의 페이지 디렉토리에는 테스트 서브디렉토리가 존재한다. 그 안에 테스트 코드가 포함된다.
@@ -97,3 +104,6 @@ yarn add react-bootstrap bootstrap
 <br />
 
 ## 🧑‍💻 Sundaes on Demand(4) - SummaryForm: 체크박스 활성화 버튼
+
+- 기본값으로 체크박스에 체크가 되어 있지 않도록 한다.
+- 체크박스에 체크를 하면 버튼이 활성화되게 한다. 그리고 체크를 해제하면 버튼이 다시 비활성화된다.
