@@ -150,3 +150,25 @@ test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해�
   expect(confirmButton).toBeDisabled();
 });
 ```
+
+<br />
+
+## 🧑‍💻 Sundaes on Demand(5) - Popover Test & useEvent
+
+- 이용약관 Popover 테스트와 페이지로부터 사라진 요소를 테스트하는 방법을 알아보자
+- Popover는 [리액트 부트스트랩 Popover](https://react-bootstrap-v3.netlify.app/components/popovers/) 를 사용할 예정이다.
+- Popover 테스트는 우리가 사용한 스타일링이 테스트 방식에 영향을 미치는 대표적인 케이스이다.
+  - Popover가 나타났을 때는 div가 생성되고 이는 텍스트 검색을 통해서 가져올 수 있다.
+  - Popover가 사라졌을 때는 div가 사라진다. 하지만 또 다른 가능성으로 여전히 페이지에는 존재하지만, 숨겨진 상태일 수도 있다. 이런 차이점은 중요하다. 왜냐하면 이용 약관으로부터 커서가 멀어지면 Popover가 사라지는 부분을 테스트하는 방식이 결정되기 때문이다.
+  - 결과적으로 스타일링이 어떻게 테스트를 결정하는지를 보여주는 좋은 예시이다. 페이지에서 요소가 어떻게 보이고 사라지는지를 판단하기 때문이다.
+
+<br />
+
+- 마우스오버(Mouseover)는 어떻게 시뮬레이션할까?
+  - [테스팅 라이브러리 - Firing Events](https://testing-library.com/docs/dom-testing-library/api-events/) 페이지를 살펴보면 fireEvent도 좋지만 userEvent가 더 좋다고 나와있다.
+  - 일반적으로 fireEvent에 비해 useEvent가 사용자 이벤트를 더욱 완전하고 현실적인 방식으로 시뮬레이션 한다.
+  - [테스팅 라이브러리 - userEvent Github](https://github.com/testing-library/user-event)
+
+```
+Most projects have a few use cases for fireEvent, but the majority of the time you should probably use @testing-library/user-event.
+```
