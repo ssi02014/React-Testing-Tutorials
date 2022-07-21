@@ -155,6 +155,8 @@ test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해�
 
 ## 🧑‍💻 Sundaes on Demand(5) - Popover Test & useEvent
 
+### userEvent
+
 - 이용약관 Popover 테스트와 페이지로부터 사라진 요소를 테스트하는 방법을 알아보자
 - Popover는 [리액트 부트스트랩 Popover](https://react-bootstrap-v3.netlify.app/components/popovers/) 를 사용할 예정이다.
 - Popover 테스트는 우리가 사용한 스타일링이 테스트 방식에 영향을 미치는 대표적인 케이스이다.
@@ -168,7 +170,60 @@ test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해�
   - [테스팅 라이브러리 - Firing Events](https://testing-library.com/docs/dom-testing-library/api-events/) 페이지를 살펴보면 fireEvent도 좋지만 userEvent가 더 좋다고 나와있다.
   - 일반적으로 fireEvent에 비해 useEvent가 사용자 이벤트를 더욱 완전하고 현실적인 방식으로 시뮬레이션 한다.
   - [테스팅 라이브러리 - userEvent Github](https://github.com/testing-library/user-event)
+  - [테스팅 라이브러리 - useEvent API](https://testing-library.com/docs/ecosystem-user-event)
 
 ```
 Most projects have a few use cases for fireEvent, but the majority of the time you should probably use @testing-library/user-event.
 ```
+
+- [테스팅 라이브러리 - useEvent API](https://testing-library.com/docs/ecosystem-user-event)을 들어가보면 API 종류가 나오는데 click, dbClick, type, upload, clear, hover, unhover 등이 존재한다.
+- useEvent를 프로젝트에 적용하려면 패키지 설치가 핋요하다.
+
+```
+npm install --save-dev @testing-library/user-event @testing-library/dom
+yarn add -D @testing-library/user-event @testing-library/dom
+```
+
+- 설치 후에는 userEvent를 import하고 기존에 fireEvent를 userEvent로 교체한다.
+- 참고로, useEvent의 click은 실제 사용자들의 상호작용 방식에 더욱 근접하다. 예를 들어 라벨을 클릭하게 되면 실제로 체크박스를 클릭하게 되고, 그 요소에 실제로 포커스 된다.
+- 아래코드는 fireEvent.click를 userEvent.click으로 교체한 내용이다.
+
+```js
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해제하면 버튼은 활성화된다.", async () => {
+  render(<SummaryForm />);
+
+  const confirmButton = screen.getByRole("button", {
+    name: /confirm order/i,
+  });
+  const checkBox = screen.getByRole("checkbox", {
+    name: /terms and conditions/i,
+  });
+
+  await userEvent.click(checkBox);
+  expect(confirmButton).toBeEnabled();
+
+  await userEvent.click(checkBox);
+  expect(confirmButton).toBeDisabled();
+});
+```
+
+- (참고로 위에 코드를 보면 await이 붙어있는데.. 비동기 작업이 아닌데 왜 await을 붙이지 않으면 테스트가 통과되지 않는지 원인을 모르겠다 파악하는대로 추가 작성 예정)
+
+<br />
+
+### Popover test
+
+- 본격적으로 `Popover 테스트`를 진행해보자.
+- 요구사항은 다음과 같다
+  - Popover는 처음에는 숨겨져있다.
+  - 체크박스 라벨로 커서가 올라가면(mouseover) Popover가 나타난다.
+  - 커서를 밖으로 빼면 Popover는 다시 사라진다.
+
+<br />
+
+- `무언가 표시되지 않음`을 확인하기위해서는 어떤 것을 사용해야될까? 지금까지는 getBy쿼리 그중에서도 `getByRole`을 통해서 요소를 가져왔다. 하지만 getByRole 말고도 사용 가능한 많은 쿼리들이 존재하며, 무언가 표시되지 않음을 확인하기 위해서는 getBy 쿼리를 사용할 수가 없다.
+
+<br />
