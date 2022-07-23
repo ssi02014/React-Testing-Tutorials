@@ -99,3 +99,16 @@ describe("카멜 케이스의 경우 대문자 앞의 공백을 띄운다", () =
     expect(replaceCamelWithSpace("MediumVioletRed")).toBe("Medium Violet Red");
   });
 });
+
+test("그냥 테스트", () => {
+  render(<App />);
+  const div1 = screen.getByText("opacity0");
+  const div2 = screen.getByText("opacity1");
+  const div3 = screen.getByText("display none");
+  const div4 = screen.getByText("display block");
+
+  expect(div1).not.toBeVisible();
+  expect(div2).toBeVisible();
+  expect(div3).not.toBeVisible();
+  expect(div4).toBeVisible();
+});

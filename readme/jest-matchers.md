@@ -183,4 +183,164 @@ test("에러가 발생하나요?", () => {
 
 ## 🧑‍💻 jest-dom Matchers
 
-(추가 예정)
+- getByRole에서 사용하는 role의 종류는 다음 사이트로 참고
+  - [Roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#roles)
+
+### toBeDieabled
+
+- toBeDieabled를 이용해서 요소가 비활성화되었는지 확인할 수 있다. 다음과 같은 요소들을 비활성화 테스트를 진행할 수 있다.
+  - `button`, `input`, `select`, `textarea`, `optgroup`, `fieldset`
+
+```html
+<button type="submit" disabled>submit</button>
+```
+
+```js
+const button = screen.getByRole("button", {
+  name: "submit",
+});
+expect(button).toBeDisabled();
+```
+
+<br />
+
+### toBeEnabled
+
+- toBeDieabled의 반대 개념이다. 활성화되어 있는지 확인할 수 있다.
+
+```html
+<button type="submit" disabled>submit</button>
+```
+
+```js
+const button = screen.getByRole("button", {
+  name: "submit",
+});
+
+expect(button).toBeEnabled();
+```
+
+<br />
+
+### toBeEmptyDOMElement
+
+- toBeEmptyDOMElement를 통해 요소에 사용자가 볼 수 있는 콘텐츠가 없는지 여부를 확인할 수 있다. 주의할 점은 주석을 무시하긴하지만 공백이 있으면 실패한다.
+
+```html
+<input type="text" />
+```
+
+```js
+const input = screen.getByRole("textbox");
+
+expect(input).toBeEmptyDOMElement();
+```
+
+<br />
+
+### toBeInTheDocument
+
+- toBeInTheDocument는 요소가 문서에 있는지 여부를 확인한다.
+
+```html
+<input type="text" />
+```
+
+```js
+const input = screen.getByRole("textbox");
+
+expect(input).toBeInTheDocument();
+```
+
+<br />
+
+### toBeInvalid
+
+- toBeInvalid는 요소가 현재 유효하지 않은지 확인할 수 있다. `값이 없거나`, `aria-invalie="true"`이거나 `checkValidity()의 결과가 false`인 경우 테스트가 통과한다.
+
+```html
+<!-- 값이 없는 input -->
+<input type="text" />
+<!-- 또는 -->
+<input type="text" aria-invalid />
+<!-- 또는  -->
+<input type="text" aria-invalid="true" />
+```
+
+```js
+const input = screen.getByRole("textbox");
+
+expect(input).toBeInvalid();
+```
+
+<br />
+
+### toBeRequired
+
+- toBeRequired를 통해 요소가 현재 필수인지 확인할 수 있다. `required`또는 `aria-required="true"` 속성이 있는 경우 통과한다.
+
+```html
+<input type="text" required />
+```
+
+```js
+const input = screen.getByRole("textbox");
+
+expect(input).toBeRequired();
+```
+
+<br />
+
+### toBeValid
+
+- toBeValid는 toBeInvalid의 반대 개념으로 현재 유효한지 알 수 있다. 요소에 `aria-invalid 속성이 없거나`, 속성 값이 `false`인 경우 유효하다. 또한 `checkValidity()`의 결과가 `true`인 경우 통과한다.
+
+```html
+<input type="text" />
+<!-- 또는 -->
+<input type="text" aria-invalid="false" />
+```
+
+```js
+const input = screen.getByRole("textbox");
+
+expect(input).toBeValid();
+```
+
+<br />
+
+### toBeVisible
+
+- toBeVisible을 통해 요소가 현재 사용자에게 표시되는지 확인할 수 있다. 다음과 같은 조건이 모두 충족되면 통과한다.
+  - 문서에 있다.
+  - css display 속성이 `none`으로 설정되어있지 않다.
+  - css visibility 속성이 `hidden` 또는 `collapse`로 설정되어있지 않다.
+  - css opacity 속성이 `0`으로 설정되어있지 않다.
+  - 부모 요소도 볼 수 있다. (DOM트리 최상단까지 계속)
+  - hidden 속성이 없다.
+  - `<details />` 태그가 있는 경우 `open` 속성이 있어야 한다.
+
+```jsx
+<div style={{ opacity: 0 }}>opacity0</div>
+<div style={{ opacity: 1 }}>opacity1</div>
+<div style={{ display: 'none' }}>display none</div>
+<div style={{ display: 'block' }}>display block</div>
+```
+
+```js
+const div1 = screen.getByText("opacity0");
+const div2 = screen.getByText("opacity1");
+const div3 = screen.getByText("display none");
+const div4 = screen.getByText("display block");
+
+expect(div1).not.toBeVisible();
+expect(div2).toBeVisible();
+expect(div3).not.toBeVisible();
+expect(div4).toBeVisible();
+```
+
+<br />
+
+### toContainElement
+
+- [다음 내용은 추후 작성](https://github.com/testing-library/jest-dom#tocontainelement)

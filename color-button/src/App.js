@@ -31,6 +31,11 @@ function App() {
         onChange={(e) => setDisabled(e.target.checked)}
       />
       <label htmlFor="enable-button-checkbox">Disable button</label>
+      {/* <div role="textbox">111</div> */}
+      <div style={{ opacity: 0 }}>opacity0</div>
+      <div style={{ opacity: 1 }}>opacity1</div>
+      <div style={{ display: "none" }}>display none</div>
+      <div style={{ display: "block" }}>display block</div>
     </div>
   );
 }
