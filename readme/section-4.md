@@ -153,7 +153,7 @@ test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해�
 
 <br />
 
-## 🧑‍💻 Sundaes on Demand(5) - Popover Test & useEvent
+## 🧑‍💻 Sundaes on Demand(5) - Popover Test & useEvent & screen Query Methods
 
 ### userEvent
 
@@ -184,8 +184,8 @@ npm install --save-dev @testing-library/user-event @testing-library/dom
 yarn add -D @testing-library/user-event @testing-library/dom
 ```
 
-- 설치 후에는 userEvent를 import하고 기존에 fireEvent를 userEvent로 교체한다.
-- 참고로, useEvent의 click은 실제 사용자들의 상호작용 방식에 더욱 근접하다. 예를 들어 라벨을 클릭하게 되면 실제로 체크박스를 클릭하게 되고, 그 요소에 실제로 포커스 된다.
+- 설치 후에는 userEvent를 import하고 기존에 fireEvent를 `userEvent`로 교체한다.
+- 참고로, useEvent의 click은 `실제 사용자들의 상호작용 방식에 더욱 근접하다.` 예를 들어 라벨을 클릭하게 되면 실제로 체크박스를 클릭하게 되고, 그 요소에 실제로 포커스 된다.
 - 아래코드는 fireEvent.click를 userEvent.click으로 교체한 내용이다.
 
 ```js
@@ -214,7 +214,7 @@ test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해�
 
 <br />
 
-### Popover test
+### Popover test - 요구사항
 
 - 본격적으로 `Popover 테스트`를 진행해보자.
 - 요구사항은 다음과 같다
@@ -225,5 +225,176 @@ test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해�
 <br />
 
 - `무언가 표시되지 않음`을 확인하기위해서는 어떤 것을 사용해야될까? 지금까지는 getBy쿼리 그중에서도 `getByRole`을 통해서 요소를 가져왔다. 하지만 getByRole 말고도 사용 가능한 많은 쿼리들이 존재하며, 무언가 표시되지 않음을 확인하기 위해서는 getBy 쿼리를 사용할 수가 없다.
+
+<br />
+
+### screen Query Methods
+
+- Popover 테스트를 진행하기전에 screen Query Methods들을 좀 더 알아보도록 하자.
+- screen 쿼리는 기본적으로 다음과 같은 포맷을 가진다.
+
+```
+command[All]ByQueryType
+```
+
+![스크린샷 2022-07-24 오전 1 24 59](https://user-images.githubusercontent.com/64779472/180613880-835f6266-0348-4ab3-9e14-3870dc5526c0.png)
+
+- command에 해당하는 부분은 다음과 같다.
+  - get: 요소가 DOM 내에 있을 것을 expect한다.
+  - query: 요소가 DOM 내에 있지 않을 것을 expect한다.
+  - find: 요소가 `비동기`적으로 나타날 경우를 expect한다.
+- [All]은 포함을 시키거나 포함을 시키지 않는 부분인데 다음과 같다.
+  - (exclude): 하나의 match만을 expect한다. ex) `getByRole`
+  - (include): 하나 이상의 match를 expect한다. (`배열`로 반환) ex) `getAllByText`
+- QueryType: 무엇으로 검색을 하는지를 의미하는데, 다음과 같다.
+  - Role(most preferred): 코드의 접근성을 보장하기위해 가장 선호된다.
+  - AltText(images): 이미지를 찾기 위해 사용한다.
+  - Text(display elements): 특정 역할이 없고 비상호작용적인 디스플레이 요소에 사용한다.
+  - TestId: 최후의 선택, data-testid 속성을 찾는다.
+  - Form elements: Form 요소를 찾는 데에는 다양한 속성의 사용이 가능하다.
+    - placeholderText
+    - LabelText
+    - DisplatValue
+- 위에 내용들은 혼합해서 가장 적절한 방법으로 DOM에서 찾고자하는 요소를 찾아낼 수 있다.
+
+```
+getByRole
+getAllByText
+QueryAllByLabelText
+```
+
+- screen query methods 관련한 문서는 아래 2개 사이트를 참고한다.
+  - [RTL - About Query](https://testing-library.com/docs/queries/about/) 해당 사이트를 통해 자세하게 내용을 확인할 수 있다.
+  - [RTL - cheatsheet](https://testing-library.com/docs/react-testing-library/cheatsheet/) 해당 사이트를 통해 간략하게 내용을 확인할 수 있다.
+
+<br />
+
+### [어떤 쿼리를 사용해야 할까?](https://testing-library.com/docs/queries/about/#priority)
+
+- `Queries Accessible to Everyone`: 모두가 액세스 할 수 있는 쿼리를 사용하는게 좋다. 화면을 쳐다보고 있는 사람이든, 스크린 리더 등의 보조 기술을 사용하고 있는 사람에게건 말이다.
+
+  - getByRole: `접근성 트리`에 노출된 모든 요소를 가져오는데 사용할 수 있다. 옵션을 사용해서 액세스 가능한 이름(name)으로 반환된 요소를 필터링 할 수 잇다. `가장 선호되는 쿼리이다.`
+
+  ```html
+  <button>Button</button>
+  ```
+
+  ```js
+  import { render, screen } from "@testing-library/react";
+
+  render(<MyComponent />);
+  const button = screen.getByRole("button", {
+    name: "Button",
+  });
+  ```
+
+  <br />
+
+  - getByLabelText: Form 필드에 정말 좋은 쿼리이다. 웹 사이트의 Form을 탐색할 때 label text를 사용해서 요소를 찾는다.
+
+  ```html
+  <label for="username-input">Username</label><input id="username-input" />
+  ```
+
+  ```js
+  import { render, screen } from "@testing-library/react";
+
+  render(<MyComponent />);
+  const inputNode = screen.getByLabelText("Username");
+  ```
+
+  <br />
+
+  - getByPlaceholderText
+
+  ```html
+  <input placeholder="Username" />
+  ```
+
+  ```js
+  import { render, screen } from "@testing-library/react";
+
+  render(<MyComponent />);
+  const inputNode = screen.getByPlaceholderText("Username");
+  ```
+
+    <br />
+
+  - getByText: `Form 외부`에서 `텍스트`를 통해 요소를 찾을 때 좋은 방법이다.
+
+  ```html
+  <a href="/about">About ℹ️</a>
+  ```
+
+  ```js
+  import { render, screen } from "@testing-library/react";
+
+  render(<MyComponent />);
+  const aboutAnchorNode = screen.getByText(/about/i);
+  ```
+
+    <br />
+
+  - getByDisplayValue: Form 요소(input, textarea, select 등)의 `현재 값`을 갖는 요소를 찾을 때 좋은 방법이다.
+
+  ```js
+  document.getElementById("lastName").value = "Norris";
+  ```
+
+  ```js
+  import { render, screen } from "@testing-library/react";
+
+  render(<MyComponent />);
+  const lastNameInput = screen.getByDisplayValue("Norris");
+  ```
+
+    <br />
+
+- `Semantic Queries`: 다음 쿼리들은 다소 선호되지 않는데 이들은 브라우저와 보조 기술 사이의 `일관성이 다소 떨어지기 때문`이다. 테스트는 사용자들이 소프트웨어를 사용하는 방식을 모방해야 한다는 점을 잊지말자. 그리고 이러한 속성들이 표시되는 방식이 일관되지 못하다면 사용자들이 소프트웨어와 상호작용 하는 것과 동일한 방식으로 테스트가 진행되고 있는지를 알 수 없을 것이다.
+
+  - getByAltText: 요소가 `alt`를 지원하는 요소(img, area, input)인 경우 이를 사용해서 해당 요소를 찾을 수 있다.
+
+  ```html
+  <img alt="Incredibles 2 Poster" src="/incredibles-2.png" />
+  ```
+
+  ```js
+  import { render, screen } from "@testing-library/react";
+
+  render(<MyComponent />);
+  const incrediblesPosterImg = screen.getByAltText(/incredibles.*? poster/i);
+  ```
+
+  <br />
+
+  - getByTitle: title은 스크린 리더와 일관되지 않으며, 시력이 있는 사용자에게는 기본적으로 표시되지 않는다.
+
+  ```html
+  <span title="Delete" id="2"></span>
+  ```
+
+  ```js
+  import { render, screen } from "@testing-library/react";
+
+  render(<MyComponent />);
+  const deleteElement = screen.getByTitle("Delete");
+  ```
+
+<br />
+
+- `Test IDs`: `최후의 수단`이다. 사용자들이 test id와 상호작용할 일은 절대 없기 때문이다.
+
+  - getByTestId: 사용자가 보거나 들을 수 없으므로 role이나 text로 일치시킬 수 없거나 의미가 없는 경우(예: 텍스트가 동적임)에만 권장
+
+  ```html
+  <div data-testid="custom-element" />
+  ```
+
+  ```js
+  import { render, screen } from "@testing-library/react";
+
+  render(<MyComponent />);
+  const element = screen.getByTestId("custom-element");
+  ```
 
 <br />

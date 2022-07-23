@@ -44,3 +44,7 @@
   - Sundaes on Demand(2) - 스타일링 셋팅(react-bootstrap)
   - Sundaes on Demand(3) - SummaryForm 구조
   - Sundaes on Demand(4) - SummaryForm: 체크박스 활성화 버튼
+  - Sundaes on Demand(5) -
+    - Popover Test
+    - useEvent
+    - screen query methods
