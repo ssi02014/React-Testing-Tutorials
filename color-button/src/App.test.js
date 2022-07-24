@@ -106,11 +106,11 @@ test("그냥 테스트", () => {
   // const button = screen.getByRole("button", {
   //   name: "button test",
   // });
-  // const input = screen.getByRole("textbox");
-  const form = screen.getByRole("form");
-  expect(form).toBeInTheDocument();
-  expect(form).toHaveFormValues({
-    username: "jane.doe",
-    rememberMe: true,
+  const input = screen.getByRole("checkbox", {
+    name: "test checkbox",
   });
+  expect(input).toBeChecked();
+
+  // const select = screen.getByRole("listbox");
+  // expect(select).toHaveDisplayValue(["Second Value", "Third Value"]);
 });

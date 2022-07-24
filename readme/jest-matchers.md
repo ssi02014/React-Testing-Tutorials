@@ -487,15 +487,15 @@ expect(input).not.toHaveFocus();
 
 ```html
 <form aria-label="form">
-  <input type="text" name="username" defaultValue="jane.doe" />
-  <input type="password" name="password" defaultValue="12345678" />
-  <input type="checkbox" name="rememberMe" defaultChecked />
+  <input type="text" name="username" value="jane.doe" />
+  <input type="password" name="password" value="12345678" />
+  <input type="checkbox" name="rememberMe" checked />
   <button type="submit">Sign in</button>
 </form>
 ```
 
 - 참고로 form은 getByRole로 요소를 찾으려면 `aria-label="form"`와 같은 액세스 가능한 이름이 필요하다.
-- 그리고 단순히 value, checked 속성을 주면 에러가 발생한다. 이유는 onChange가 없다는 이유인데 그래서 default 옵션으로 수정했다.
+- 참고로 onChange를 넣어주지 않으면 테스트 상 경고 메세지가 나오는데 onChange를 넣거나 defaultValue와 같은 속성을 넣어주면 해결된다.
 
 ```js
 const form = screen.getByRole("form");
@@ -510,6 +510,105 @@ expect(form).toHaveFormValues({
 
 ### toHaveStyle
 
-- [추가 예정](https://github.com/testing-library/jest-dom#tohavestyle)
+- toHaveStyle를 통해 특정 요소에 특정 `css 속성`이 있는지 확인한다.
+
+```jsx
+// 참고) jsx형식으로 작성됌
+<button type="submit" style={{ backgroundColor: "red", color: "white" }}>
+  button test
+</button>
+```
+
+```js
+const button = screen.getByRole("button", {
+  name: "button test",
+});
+expect(button).toHaveStyle({
+  backgroundColor: "red",
+  color: "white",
+});
+```
+
+<br />
+
+### toHaveTextContent
+
+- toHaveTextContent를 통해 주어진 요소에 특정 `텍스트 콘텐츠`가 있는지 여부를 확인한다.
+
+```html
+<span>span textContent test</span>
+```
+
+```js
+const span = screen.getByText("span textContent test");
+expect(span).toHaveTextContent("span textContent test");
+```
+
+<br />
+
+### toHaveValue
+
+- toHaveValue를 통해 form 요소에 지정된 값이 있는지 확인할 수 있다.
+- input, select, textarea 요소에만 허용되며, checkbox, radio는 toBeChecked 또는 toHaveFormValues을 사용해야한다.
+
+```html
+<input type="text" value="test" />
+<select multiple>
+  <option value="first">First Value</option>
+  <option value="second" selected>Second Value</option>
+  <option value="third" selected>Third Value</option>
+</select>
+```
+
+```js
+const input = screen.getByRole("textbox");
+expect(input).toHaveValue("test");
+
+const select = screen.getByRole("listbox");
+expect(select).toHaveValue(["second", "third"]);
+```
+
+- 참고로 select는 다음 역할들의 슈퍼 클래스이다. `listbox`,`menu`, `radiogroup`, `tree` 따라서 앞에 4가지 역할로 지정해줄 수 있다.
+
+<br />
+
+### toHaveDisplayValue
+
+- toHaveDisplayValue를 통해 form 요소에 `지정된 표시 값(실제 사용자에게 보여지는 값)`이 있는지 확인할 수 있다.
+
+```html
+<input type="text" value="test" />
+<select multiple>
+  <option value="first">First Value</option>
+  <option value="second" selected>Second Value</option>
+  <option value="third" selected>Third Value</option>
+</select>
+```
+
+```js
+const input = screen.getByRole("textbox");
+expect(input).toHaveDisplayValue("test");
+
+const select = screen.getByRole("listbox");
+expect(select).toHaveDisplayValue(["Second Value", "Third Value"]);
+```
+
+<br />
+
+### toBeChecked
+
+- toBeChecked를 통해 주어진 요소가 check되어 있는지 확인할 수 있다.
+
+```html
+<label htmlFor="checkbox">test checkbox</label>
+<input type="checkbox" id="checkbox" checked />
+```
+
+```js
+const input = screen.getByRole("checkbox", {
+  name: "test checkbox",
+});
+expect(input).toBeChecked();
+```
 
 <br />

@@ -32,16 +32,22 @@ function App() {
       />
       <label htmlFor="enable-button-checkbox">Disable button</label>
 
-      {/* <button className="test button" type="submit" name="test">
+      {/* <button type="submit" style={{ backgroundColor: "red", color: "white" }}>
         button test
       </button> */}
-      {/* <input type="text" /> */}
-      <form aria-label="form">
-        <input type="text" name="username" defaultValue="jane.doe" />
-        <input type="password" name="password" defaultValue="12345678" />
-        <input type="checkbox" name="rememberMe" defaultChecked />
-        <button type="submit">Sign in</button>
-      </form>
+      {/* <input type="text" defaultValue="test" />
+      <select multiple>
+        <option value="first">First Value</option>
+        <option value="second" selected>
+          Second Value
+        </option>
+        <option value="third" selected>
+          Third Value
+        </option>
+      </select> */}
+      <label htmlFor="checkbox">test checkbox</label>
+      <input type="checkbox" id="checkbox" checked />
+      {/* <span>span textContent test</span> */}
     </div>
   );
 }
