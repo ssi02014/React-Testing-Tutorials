@@ -185,6 +185,7 @@ test("에러가 발생하나요?", () => {
 
 - getByRole에서 사용하는 role의 종류는 다음 사이트로 참고
   - [Roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#roles)
+  - [WAI-ARIA Roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles)
 
 ### toBeDieabled
 
@@ -343,4 +344,172 @@ expect(div4).toBeVisible();
 
 ### toContainElement
 
-- [다음 내용은 추후 작성](https://github.com/testing-library/jest-dom#tocontainelement)
+- toContainElement를 통해 `요소에 다른 요소가 하위 항목으로 포함`되어 있는지 여부를 확인할 수 있습니다.
+
+```html
+<ul>
+  <li>zzz</li>
+</ul>
+```
+
+```js
+const menu = screen.getByRole("list");
+const menuItem = screen.getByRole("listitem");
+expect(menu).toContainElement(menuItem);
+```
+
+<br />
+
+### toContainHTML
+
+- toContainHTML은 HTMl 요소를 나타내는 문자열이 다른 요소에 포함되어 있는지 확인한다.
+- 문자열에는 불완전한 HTML이 아닌 유효한 HTML이 포함되어야 한다.
+- 하지만, 이 matcher는 실제로 사용할 필요가 없다. 사용자가 브라우저에서 앱을 인식하는 방식의 관점에서 테스트하는 것이 좋기 때문인데 따라서, 특정 DOM 구조에 대한 테스트는 권장하지 않는다.
+- 차라리 위에 `toContainElement`를 사용하는 것을 권장한다.
+
+<br />
+
+```html
+<ul>
+  <li>zzz</li>
+</ul>
+```
+
+```js
+const menu = screen.getByRole("list");
+expect(menu).toContainHTML("<li>zzz</li>");
+```
+
+<br />
+
+### toHaveAccessibleDescription
+
+- toHaveAccessibleDescription를 통해 요소에 예상되는 `액세스 가능한 설명`이 있다고 주장할 수 있다.
+
+```html
+<a href="/" title="test">Start</a>
+```
+
+```js
+const link = screen.getByRole("link");
+expect(link).toHaveAccessibleDescription();
+expect(link).toHaveAccessibleDescription("test");
+```
+
+<br />
+
+### toHaveAccessibleName
+
+- toHaveAccessibleNamesms를 통해 요소에 예상되는 `액세스 가능한 이름`이 있다고 주장할 수 있다. 예를 들어, 양식 요소와 버튼에 적절하게 레이블이 지정되었는지 확인할 때 유용하다.
+
+```html
+<img src="" alt="test" />
+<!-- 또는 -->
+<input type="text" title="test" />
+```
+
+```js
+const img = screen.getByRole("img");
+const input = screen.getByRole("textbox");
+
+expect(img).toHaveAccessibleName();
+expect(img).toHaveAccessibleName("test");
+
+expect(input).toHaveAccessibleName();
+expect(input).toHaveAccessibleName("test");
+```
+
+<br />
+
+### toHaveAttribute
+
+- toHaveAttribute를 통해 주어진 요소에 `특정 속성`이 있는지 여부를 확인할 수 있다.
+
+```html
+<button type="submit" name="test">button test</button>
+```
+
+```js
+const button = screen.getByRole("button", {
+  name: "button test",
+});
+
+expect(button).toHaveAttribute("name", "test");
+expect(button).toHaveAttribute("type", "submit");
+```
+
+<br />
+
+### toHaveClass
+
+- toHaveClass를 통해 요소에 특정 `class`가 있는지 여부를 확인할 수 있다.
+- 요소에 class가 없다고하지 않는 한 최소한 하나의 클래스를 제공해야 한다.
+
+```html
+<button className="test button" type="submit" name="test">button test</button>
+```
+
+```js
+const button = screen.getByRole("button", {
+  name: "button test",
+});
+
+expect(button).toHaveClass("test");
+expect(button).toHaveClass("button");
+expect(button).toHaveClass("test", "button");
+```
+
+<br />
+
+### toHaveFocus
+
+- toHaveFocus를 통해 요소에 `focus` 되어있는지 여부를 확인할 수 있다.
+
+```html
+<input type="text" />
+```
+
+```js
+const input = screen.getByRole("textbox");
+
+input.focus();
+expect(input).toHaveFocus();
+
+input.blur();
+expect(input).not.toHaveFocus();
+```
+
+<br />
+
+### toHaveFormValues
+
+- toHaveFormValues를 통해 `form` 또는 `fieldset`에 지정된 각 이름에 대한 `form controll`이 포함되어 있고 지정된 값이 있는지 확인할 수 있다.
+
+```html
+<form aria-label="form">
+  <input type="text" name="username" defaultValue="jane.doe" />
+  <input type="password" name="password" defaultValue="12345678" />
+  <input type="checkbox" name="rememberMe" defaultChecked />
+  <button type="submit">Sign in</button>
+</form>
+```
+
+- 참고로 form은 getByRole로 요소를 찾으려면 `aria-label="form"`와 같은 액세스 가능한 이름이 필요하다.
+- 그리고 단순히 value, checked 속성을 주면 에러가 발생한다. 이유는 onChange가 없다는 이유인데 그래서 default 옵션으로 수정했다.
+
+```js
+const form = screen.getByRole("form");
+expect(form).toBeInTheDocument();
+expect(form).toHaveFormValues({
+  username: "jane.doe",
+  rememberMe: true,
+});
+```
+
+<br />
+
+### toHaveStyle
+
+- [추가 예정](https://github.com/testing-library/jest-dom#tohavestyle)
+
+<br />

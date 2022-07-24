@@ -21,19 +21,19 @@ test("버튼 클릭을 통한 배경색 및 텍스트 변화 테스트", () => {
   expect(colorButton).toHaveTextContent("Change to Medium Violet Red");
 });
 
-test("버튼, 체크박스 초기 상태 테스트", () => {
-  render(<App />);
+// test("버튼, 체크박스 초기 상태 테스트", () => {
+//   render(<App />);
 
-  // check that the button starts out enabled
-  const colorButton = screen.getByRole("button", {
-    name: "Change to Midnight Blue",
-  });
-  expect(colorButton).toBeEnabled();
+//   // check that the button starts out enabled
+//   const colorButton = screen.getByRole("button", {
+//     name: "Change to Midnight Blue",
+//   });
+//   expect(colorButton).toBeEnabled();
 
-  // check that the checkbox starts out unchecked
-  const checkbox = screen.getByRole("checkbox");
-  expect(checkbox).not.toBeChecked();
-});
+//   // check that the checkbox starts out unchecked
+//   const checkbox = screen.getByRole("checkbox");
+//   expect(checkbox).not.toBeChecked();
+// });
 
 test("체크박스를 2번 클릭하는 동안 버튼 활성화 및 체크박스 체크 유무 테스트", () => {
   render(<App />);
@@ -102,13 +102,15 @@ describe("카멜 케이스의 경우 대문자 앞의 공백을 띄운다", () =
 
 test("그냥 테스트", () => {
   render(<App />);
-  const div1 = screen.getByText("opacity0");
-  const div2 = screen.getByText("opacity1");
-  const div3 = screen.getByText("display none");
-  const div4 = screen.getByText("display block");
 
-  expect(div1).not.toBeVisible();
-  expect(div2).toBeVisible();
-  expect(div3).not.toBeVisible();
-  expect(div4).toBeVisible();
+  // const button = screen.getByRole("button", {
+  //   name: "button test",
+  // });
+  // const input = screen.getByRole("textbox");
+  const form = screen.getByRole("form");
+  expect(form).toBeInTheDocument();
+  expect(form).toHaveFormValues({
+    username: "jane.doe",
+    rememberMe: true,
+  });
 });

@@ -31,11 +31,17 @@ function App() {
         onChange={(e) => setDisabled(e.target.checked)}
       />
       <label htmlFor="enable-button-checkbox">Disable button</label>
-      {/* <div role="textbox">111</div> */}
-      <div style={{ opacity: 0 }}>opacity0</div>
-      <div style={{ opacity: 1 }}>opacity1</div>
-      <div style={{ display: "none" }}>display none</div>
-      <div style={{ display: "block" }}>display block</div>
+
+      {/* <button className="test button" type="submit" name="test">
+        button test
+      </button> */}
+      {/* <input type="text" /> */}
+      <form aria-label="form">
+        <input type="text" name="username" defaultValue="jane.doe" />
+        <input type="password" name="password" defaultValue="12345678" />
+        <input type="checkbox" name="rememberMe" defaultChecked />
+        <button type="submit">Sign in</button>
+      </form>
     </div>
   );
 }
