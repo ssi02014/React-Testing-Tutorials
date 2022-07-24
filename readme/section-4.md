@@ -210,7 +210,8 @@ test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해�
 });
 ```
 
-- (참고로 위에 코드를 보면 await이 붙어있는데.. 비동기 작업이 아닌데 왜 await을 붙이지 않으면 테스트가 통과되지 않는지 원인을 모르겠다 파악하는대로 추가 작성 예정)
+- 참고로 위에 코드를 보면 await이 붙어있는데 이는 click하고 disabled의 상태가 바뀌는 작업이 `비동기적으로 진행하기 때문이다.` 실제로 useState는 비동기로 작동한다.
+- **_ 해당 코드는 아래에서 `waitFor`로 수정된다!! 그때 다시 참고하자 _**
 
 <br />
 
@@ -396,5 +397,152 @@ QueryAllByLabelText
   render(<MyComponent />);
   const element = screen.getByTestId("custom-element");
   ```
+
+<br />
+
+### Popover Test
+
+- 위에서 query options들에대해서 알아봤으니 실제로 테스트 코드를 작성해보자.
+- 첫 번째 테스트는, Popover가 화면 상에서 숨겨지는게 아니라 페이지에 아에 존재하지 않아야 한다.
+  - 이는, match가 없어야하기 때문에 `queryBy`가 적절하다. query는 get과 다르게 match가 없을 경우 오류를 발생시키지 않고 `null을 반환`한다. 반대로 get은 오류를 발생시킨다.
+  - 해당 팝오버는 queryBy할 수 있는 역할을 가지고 있지 않다. 그저 디스플레이일 뿐이니 `queryByText`를 이용한다.
+  - 그리고 요소가 문서에 존재하는지를 테스트해주는 `toBeInTheDocument`를 이용해서 테스트한다.
+
+```js
+// SummaryForm.test.js
+test("Popover가 hover에 반응한다.", () => {
+  render(<SummaryForm />);
+
+  // 1. Popover는 처음에는 숨겨져있다.(아에 존재하면 안된다)
+  const nullPopover = screen.queryByText(
+    /no ice cream will actually be delivered/i
+  );
+  expect(nullPopover).not.toBeInTheDocument();
+});
+```
+
+- 두 번째 테스트는, mouseover를 시뮬레이션한다. `teramsAndCondtions`에 mouseover하면 Popover가 나타나고, mouseout하면 Popover는 사라진다.
+  - userEvent에서 mouseover를 할 때는 `hover`를 사용하고 mouseout에는 `unhover`를 사용한다.
+
+```js
+// SummaryForm.test.js
+test("Popover가 hover에 반응한다.", () => {
+  // ...
+  // 2. 체크박스 라벨로 커서가 올라가면(mouseover) Popover가 나타난다.
+  const termsAndConditions = screen.getByText(/terms and conditions/i);
+
+  userEvent.hover(termsAndConditions); // hover 발생
+
+  const popover = screen.getByText(/no ice cream will actually be delivered/i);
+  expect(popover).toBeInTheDocument();
+  // 커서를 밖으로 빼면 Popover는 다시 사라진다.
+});
+```
+
+- 위 코드에서 `expect(popover).toBeInTheDocument();`는 사실 없어도되는 코드이다 왜냐하면 getBy는 match되는 것을 찾지 못하면 에러를 발생시키기 때문이다. 하지만 테스트의 가독성을 위해서는 추가해주는게 좋다.
+
+<br />
+
+- 마지막 테스트는, 첫 번째 테스트와 유사한데 mouseout을 시뮬레이션 하는 것이다.
+
+```js
+// SummaryForm.test.js
+test("Popover가 hover에 반응한다.", () => {
+  // ...
+  // 3. 커서를 밖으로 빼면 Popover는 다시 사라진다.
+  userEvent.unhover(termsAndConditions);
+
+  const nullPopoverAgain = screen.queryByText(
+    /no ice cream will actually be delivered/i
+  );
+
+  expect(nullPopoverAgain).not.toBeInTheDocument();
+});
+```
+
+- 여기까지 작성하고 테스트를 확인해보면 당연히 실패한다. 따라서 테스트를 통과할 수 있게 SummaryForm.js도 수정해준다.
+
+```jsx
+// SummaryForm.js
+// imports
+import Popover from "react-bootstrap/Popover";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+
+const SummaryForm = () => {
+  const [tcChecked, setTcChecked] = useState(false);
+
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Body>No ice cream will actually be delivered</Popover.Body>
+    </Popover>
+  );
+
+  const checkboxLabel = (
+    <span>
+      I agree to{" "}
+      <OverlayTrigger placement="right" overlay={popover}>
+        <span style={{ color: "blue" }}>Terms and Conditions</span>
+      </OverlayTrigger>
+    </span>
+  );
+
+  return <Form>{/* ... */}</Form>;
+};
+
+export default SummaryForm;
+```
+
+- 위와 같이 SummaryForm.js을 수정을 했음에도, test 코드의 아래 부분에서 문제가 발생한다. 문제의 내용은 마우스아웃을 했을 때 팝오버가 사라지지 않는 다는 것이다.
+- 이런 오류가 발생하는 이유는 팝오버가 사라지는 동작이 `비동기적`으로 일어나고 있었기 때문이다. 즉, 테스트 함수가 완료되고 나서야 동작이 일어난 것이다. 테스트가 종료된 후에 무언가가 일어나고 있기 때문에 에러가 발생한 것이다.
+
+```js
+userEvent.unhover(termsAndConditions);
+
+const nullPopoverAgain = screen.queryByText(
+  /no ice cream will actually be delivered/i
+);
+
+expect(nullPopoverAgain).not.toBeInTheDocument();
+```
+
+- 이런 문제를 해결하기 위해서 `단언을 비동기화`함으로써 해결할 수 있다.
+  - [RTL - Async Methods](https://testing-library.com/docs/dom-testing-library/api-async)
+- 아래 코드에서는 `waitForElementToBeRemoved`를 사용했다. waitForElementToBeRemoved는 DOM에서 요소가 제거되기를 기다리는 함수이다.
+
+```js
+test("Popover가 hover에 반응한다.", async () => {
+  expect(popover).toBeInTheDocument();
+
+  // 커서를 밖으로 빼면 Popover는 다시 사라진다.
+  userEvent.unhover(termsAndConditions);
+
+  await waitForElementToBeRemoved(() =>
+    screen.queryByText(/no ice cream will actually be delivered/i)
+  );
+});
+```
+
+- waitForElementToBeRemoved 외에도 더 넓은 범주로 사용하는 `waitFor`도 존재하는데, 일정 기간동안 기다려야 할 때 사용한다.
+- waitFor는 콜백 함수에서 Promise를 반환하면 해당 Promise가 거부될 때까지 콜백을 다시 호출하지 않는다. 이를 통해 비동기적으로 확인해야 하는 항목을 기다릴 수 있다.
+
+```js
+// SummaryForm.js
+test("체크박스가 체크되면 버튼은 비활성화되고, 체크를 해제하면 버튼은 활성화된다.", async () => {
+  render(<SummaryForm />);
+
+  const confirmButton = screen.getByRole("button", {
+    name: /confirm order/i,
+  });
+  const checkBox = screen.getByRole("checkbox", {
+    name: /terms and conditions/i,
+  });
+
+  userEvent.click(checkBox);
+  await waitFor(() => expect(confirmButton).toBeEnabled());
+
+  userEvent.click(checkBox);
+  await waitFor(() => expect(confirmButton).toBeDisabled());
+});
+```
 
 <br />
