@@ -31,23 +31,6 @@ function App() {
         onChange={(e) => setDisabled(e.target.checked)}
       />
       <label htmlFor="enable-button-checkbox">Disable button</label>
-
-      {/* <button type="submit" style={{ backgroundColor: "red", color: "white" }}>
-        button test
-      </button> */}
-      {/* <input type="text" defaultValue="test" />
-      <select multiple>
-        <option value="first">First Value</option>
-        <option value="second" selected>
-          Second Value
-        </option>
-        <option value="third" selected>
-          Third Value
-        </option>
-      </select> */}
-      <label htmlFor="checkbox">test checkbox</label>
-      <input type="checkbox" id="checkbox" checked />
-      {/* <span>span textContent test</span> */}
     </div>
   );
 }

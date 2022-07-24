@@ -612,3 +612,17 @@ expect(input).toBeChecked();
 ```
 
 <br />
+
+### ETC Matchers
+
+- 많이 사용하지 않을 것 같은 matcher들이다. 이는 공식 문서에서 참고하자.
+  - [toBePartiallyChecked](https://github.com/testing-library/jest-dom#tobepartiallychecked)
+  - [toHaveErrorMessage](https://github.com/testing-library/jest-dom#tohaveerrormessage)
+
+<br />
+
+### 더 이상 사용하지 않는 matchers
+
+- toBeEmpty는 더 이상 사용하지 않는다. 대신 toBeEmptyDOMElement를 권장한다.
+- toBeInTheDOM는 더 이상 사용하지 않는다. 대신 toBeInTheDocument를 권장한다.
+- toHaveDescription는 더 이상 사용하지 않는다. 대신 toHaveAccessibleDescriptio를 권장한다.
