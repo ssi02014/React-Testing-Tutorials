@@ -187,9 +187,9 @@ test("에러가 발생하나요?", () => {
   - [Roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques#roles)
   - [WAI-ARIA Roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles)
 
-### toBeDieabled
+### toBeDisabled
 
-- toBeDieabled를 이용해서 요소가 비활성화되었는지 확인할 수 있다. 다음과 같은 요소들을 비활성화 테스트를 진행할 수 있다.
+- toBeDisabled를 이용해서 요소가 비활성화되었는지 확인할 수 있다. 다음과 같은 요소들을 비활성화 테스트를 진행할 수 있다.
   - `button`, `input`, `select`, `textarea`, `optgroup`, `fieldset`
 
 ```html
