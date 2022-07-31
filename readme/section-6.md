@@ -186,3 +186,57 @@ afterAll(() => server.close());
 <br />
 
 ## 🧑‍💻 MSW(2) - MSW로 스쿱 옵션 테스트하기
+
+- 스쿱 옵션을 테스트하기 전에 가장 먼저 entry 폴더 생성 후에 Options.js, ScoopOption.js 컴포넌트를 생성한다.
+
+```js
+// entry/Options
+import React from "react";
+
+const Options = ({ optionType }) => {
+  return <div></div>;
+};
+
+export default Options;
+```
+
+```js
+// entry/ScoopOption
+import React from "react";
+
+const ScoopOption = () => {
+  return <div></div>;
+};
+
+export default ScoopOption;
+```
+
+- 그리고 entry/tests 폴더에다 Option.test.js를 생성한다.
+- 참고로 Option 테스트는 간단하다. 서버에서 반환할 각 옵션의 이미지를 띄우는 것을 테스트 할 것이기 때문이다. 정확히 말하면 서버는 아니고 MSW이다.
+
+```js
+// entry/tests/Option.test.js
+import { render, screen } from "@testing-library/react";
+import Options from "../Options";
+
+test("display image for each scoop option from server", () => {
+  render(<Options optionType="scoops" />);
+
+  // find images
+  // 모든 이미지 요소를 역할로서 가져와야하기 때문에 getAllByRole 사용
+  // 모든 alt 텍스트가 scoop이라는 문자열로 끝나야 한다.
+  const scoopImages = screen.getAllByRole("img", {
+    name: /scoop$/i,
+  });
+  expect(scoopImages).toHaveLength(2);
+
+  // confirm alt text of images
+  // map을 이용해 모든 이미지에 대한 alt 텍스트를 얻을 수 있다.
+  const altText = scoopImages.map((el) => el.alt);
+
+  // 객체나 배열을 사용할 때는 toBe 말고 toEqual 사용해야 한다.
+  expect(altText).toEqual(["Chocolate scoop", "Vanilla scoop"]);
+});
+```
+
+- 위에 처럼 Option 컴포넌트에 대한 코드를 작성했다. 몇 가지 살펴볼 내용은 주석으로 남겼다.
