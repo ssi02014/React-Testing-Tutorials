@@ -130,7 +130,7 @@ app.get("/scoops", (req, res) => {
 
 ```js
 export const handlers = [
-  rest.post("http://localhost:3030/scoops", (req, res, ctx) => {
+  rest.get("http://localhost:3030/scoops", (req, res, ctx) => {
     return res(
       ctx.json([
         { name: "Chocolate", imagePath: "/images/chocolate.png" },
@@ -240,3 +240,99 @@ test("display image for each scoop option from server", () => {
 ```
 
 - 위에 처럼 Option 컴포넌트에 대한 코드를 작성했다. 몇 가지 살펴볼 내용은 주석으로 남겼다.
+- 다음은 실제로 리액트 코드를 작성해서 테스트를 통과해보자. 가장 먼저 `axios`를 설치해야 한다.
+
+```
+npm i axios
+또는
+yarn add axios
+```
+
+- 그리고 아래와 같이 코드를 작성한다.
+
+```jsx
+// Options.js
+import React, { useEffect, useState, useCallback } from "react";
+import axios from "axios";
+import ScoopOptions from "./ScoopOption";
+import Row from "react-bootstrap/Row";
+
+// optionType is 'scoops' or 'toppings'
+const Options = ({ optionType }) => {
+  const [items, setItems] = useState([]);
+  const getItems = useCallback(async () => {
+    try {
+      const res = await axios.get(`http://localhost:3030/${optionType}`);
+      setItems(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [optionType]);
+
+  const ItemComponent = optionType === "scoops" ? ScoopOptions : null;
+  const optionItems = items.map((item) => (
+    <ItemComponent
+      key={item.name}
+      name={item.name}
+      imagePath={item.imagePath}
+    />
+  ));
+
+  useEffect(() => {
+    getItems();
+  }, [getItems]);
+
+  return <Row>{optionItems}</Row>;
+};
+
+export default Options;
+```
+
+```js
+// ScoopOption.js
+import React from "react";
+import Col from "react-bootstrap/Col";
+
+const ScoopOption = ({ name, imagePath }) => {
+  return (
+    <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
+      <img
+        src={`http://localhost:3030/${imagePath}`}
+        alt={`${name} scoop`}
+        style={{ width: "75%" }}
+      />
+    </Col>
+  );
+};
+
+export default ScoopOption;
+```
+
+- 위와 같이 코드를 작성해도 테스트를 진행하면 에러가 발생한다.
+- 이는 비동기식으로 페이지에 나타날 비동기 작업을 할 때 await과 findBy를 사용해야 하며 서버 연결은 거의 항상 비동기식이다.
+
+```js
+import { render, screen, waitFor } from "@testing-library/react";
+import Options from "../Options";
+
+test("display image for each scoop option from server", async () => {
+  render(<Options optionType="scoops" />);
+
+  // find images
+  // 모든 alt 텍스트가 scoop이라는 문자열로 끝나야 한다.
+  const scoopImages = await screen.findAllByRole("img", {
+    name: /scoop$/i,
+  });
+  await waitFor(() => expect(scoopImages).toHaveLength(2));
+
+  // confirm alt text of images
+  // map을 이용해 모든 이미지에 대한 alt 텍스트를 얻을 수 있다.
+  const altText = scoopImages.map((el) => el.alt);
+
+  // 객체나 배열을 사용할 때는 toBe 말고 toEqual 사용
+
+  await waitFor(() =>
+    expect(altText).toEqual(["Chocolate scoop", "Vanilla scoop"])
+  );
+});
+```
