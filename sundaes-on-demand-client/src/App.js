@@ -5,7 +5,8 @@ function App() {
   return (
     <div className="App">
       <OrderSummary />
-      <Options optionType={"scoops"} />
+      <Options optionType="scoops" />
+      <Options optionType="toppings" />
     </div>
   );
 }
