@@ -54,6 +54,5 @@
 - [Section 5 - Mock Service Worker(MSW)로 서버 응답 시뮬레이션](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-5.md)
   - MSW(1) - Mock Service Worker와 핸들러 소개
   - MSW(2) - MSW로 스쿱 옵션 테스트하기
-  - test
 
 <br />
