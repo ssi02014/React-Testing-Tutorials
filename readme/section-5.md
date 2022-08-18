@@ -269,3 +269,44 @@ test("display image for each scoop option from server", async () => {
 - 리액트 코드는 sundaes-on-demand-client 프로젝트의 `pages/entry/Options`, `OptionItem`을 참고하자
 
 <br />
+
+<br />
+
+## 🧑‍💻 MSW(3) - MSW Error 테스트
+
+- 서버에서 에러 응답이 발생할 경우 애플리케이션이 적절히 대응해야 한다.
+- 서버 에러를 발생시키는 테스트를 위해서 기존의 server의 handler들을 테스트 파일에서 오버라이딩하면 된다.
+- 그리고 아래 예제에서는 axios catch를 이용한 비동기 테스트이기 때문에 `find`와 `waitFor`를 이용해서 테스트를 진행한다.
+
+```js
+// OrderEntry.test.js
+import { render, screen, waitFor } from "@testing-library/react";
+import OrderEntry from "../OrderEntry";
+import { rest } from "msw";
+import { server } from "../../../mocks/server";
+
+test("handles error for scoops toppings router", async () => {
+  // 기존에 설정한 server handler를 오버라이딩 하는 코드 (에러 발생시키기 위함)
+  server.resetHandlers(
+    rest.get("http://localhost:3030/scoops", (req, res, ctx) => {
+      // 반환을 안해주면 테스트는 통과하지만 warn 경고가 나옴 반환을 해주자
+      return res(ctx.status(500));
+    }),
+    rest.get("http://localhost:3030/toppings", (req, res, ctx) => {
+      return res(ctx.status(500));
+    })
+  );
+
+  render(<OrderEntry />);
+
+  // waitFor로 비동기 처리해주지 않으면 단언이 동기적으로 작동해서 오류가 발생 함
+  await waitFor(async () => {
+    // axios catch를 이용하므로(비동기) find를 이용 (+ 다수의 Alert이 나와야되므로 findAllByRole을 사용)
+    const alerts = await screen.findAllByRole("alert");
+    // scoops, topping 2개의 alert이 나와야 함
+    expect(alerts).toHaveLength(2);
+  });
+});
+```
+
+<br />
