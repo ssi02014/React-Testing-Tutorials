@@ -310,3 +310,19 @@ test("handles error for scoops toppings router", async () => {
 ```
 
 <br />
+
+### test.only/skip
+
+- test.only와 test.skip을 이용해서 파일 내 특정 테스트를 격리할 수 있다.
+
+```js
+test.only("only test", () => {
+  // code
+});
+
+test.skip("skip test", () => {
+  // code
+});
+```
+
+<br />
