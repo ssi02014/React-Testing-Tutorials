@@ -13,5 +13,5 @@ beforeAll(() => server.listen());
 // so they don't affect other tests.
 afterEach(() => server.resetHandlers());
 
-// Clean up after the tests are finished.
+// 모든 테스트 종료 후 서버 Close
 afterAll(() => server.close());
