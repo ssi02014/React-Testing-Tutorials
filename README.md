@@ -54,6 +54,10 @@
 - [Section 5 - Mock Service Worker(MSW)로 서버 응답 시뮬레이션](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-5.md)
   - MSW(1) - Mock Service Worker와 핸들러 소개
   - MSW(2) - MSW로 스쿱 옵션 테스트하기
-  - MSW(2) - MSW Error 테스트
+  - MSW(3) - MSW Error 테스트
 
 <br />
+
+- [Section 6 - Provider에 래핑된 컴포넌트 테스트하기](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-5.md)
+  - Provider(1) - 텍스트 입력란 채우기: 소계 테스트
+  - Provider(2) - 테스트 설정에 Context 추가하기

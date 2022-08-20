@@ -1,8 +1,9 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import Options from "../Options";
+import { OrderDetailsProvider } from "../../../contexts/OrderDetails";
 
 test("display image for each scoop option from server", async () => {
-  render(<Options optionType="scoops" />);
+  render(<Options optionType="scoops" />, { wrapper: OrderDetailsProvider });
 
   // find images
   // 모든 alt 텍스트가 scoop이라는 문자열로 끝나야 한다.
@@ -20,7 +21,7 @@ test("display image for each scoop option from server", async () => {
 });
 
 test("display image for each toppings option from server", async () => {
-  render(<Options optionType="toppings" />);
+  render(<Options optionType="toppings" />, { wrapper: OrderDetailsProvider });
 
   const toppingImages = await screen.findAllByRole("img", {
     name: /topping$/i,

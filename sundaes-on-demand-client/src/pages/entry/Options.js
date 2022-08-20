@@ -3,11 +3,15 @@ import axios from "axios";
 import OptionItem from "./OptionItem";
 import Row from "react-bootstrap/Row";
 import AlertBanner from "../common/AlertBanner";
+import { pricePerItem } from "../../constants";
+import { useOrderDetails } from "../../contexts/OrderDetails";
 
 // optionType is 'scoops' or 'toppings'
 const Options = ({ optionType }) => {
   const [items, setItems] = useState([]);
   const [error, setError] = useState(false);
+  const title = optionType;
+  const [orderDetails, updateItemCount] = useOrderDetails();
 
   const getItems = useCallback(async () => {
     try {
@@ -24,6 +28,9 @@ const Options = ({ optionType }) => {
       name={item.name}
       imagePath={item.imagePath}
       optionType={optionType}
+      updateItemCount={(itemName, newItemCount) =>
+        updateItemCount(itemName, newItemCount, optionType)
+      }
     />
   ));
 
@@ -31,7 +38,23 @@ const Options = ({ optionType }) => {
     getItems();
   }, []);
 
-  return <>{error ? <AlertBanner /> : <Row>{optionItems}</Row>}</>;
+  return (
+    <>
+      {error ? (
+        <AlertBanner />
+      ) : (
+        <>
+          <p>hi</p>
+          <h2>{title}</h2>
+          <p>{pricePerItem[optionType]} each</p>
+          <p>
+            {title} total: {orderDetails.totals[optionType]}
+          </p>
+          <Row>{optionItems}</Row>
+        </>
+      )}
+    </>
+  );
 };
 
 export default Options;
