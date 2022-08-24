@@ -55,3 +55,39 @@ test("update scoop subtotal when scoops change", async () => {
 ```
 
 <br />
+
+## 🧑‍💻 Provider(3) - Provider Wrapper 적용
+
+- [Custom Render](https://testing-library.com/docs/react-testing-library/setup/#custom-render)
+- Wrapper를 이용하면 Provider를 우리가 렌더링하는 모든 컴포넌트와 테스트에 전역적으로 적용해 개별 작업이 필요 없게끔 할 수 있다.
+
+```js
+//test-utils/testing-library-utils.js
+import { render } from "@testing-library/react";
+import { OrderDetailsProvider } from "../contexts/OrderDetails";
+
+const customRender = (ui, options) => {
+  return render(ui, { wrapper: OrderDetailsProvider, ...options });
+};
+
+// re-export
+export * from "@testing-library/react";
+
+// override render method
+export { customRender as render };
+```
+
+- 위와 같이 test utils함수를 만든다.
+- `@testing-library/react`의 모든걸 re-export하며 `customRender`를 통해서 우리가 래핑하고자 하는 내용을 추가해 export한다.
+
+```js
+import { render, screen } from "../../../test-utils/testing-library-utils";
+import Options from "../Options";
+
+test("display image for each scoop option from server", async () => {
+  render(<Options optionType="scoops" />);
+  // ...
+});
+```
+
+- 이를 위와같이 import해서 사용하면 된다.
