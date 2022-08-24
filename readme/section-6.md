@@ -90,4 +90,6 @@ test("display image for each scoop option from server", async () => {
 });
 ```
 
-- 이를 위와같이 import해서 사용하면 된다.
+- 이를 위와같이 test-utils/testing-library-utils를 import해서 사용하면 된다.
+
+<br />

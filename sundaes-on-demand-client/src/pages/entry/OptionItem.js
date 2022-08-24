@@ -14,22 +14,34 @@ const OptionItem = ({ name, imagePath, optionType, updateItemCount }) => {
         alt={optionType === "scoops" ? `${name} scoop` : `${name} topping`}
         style={{ width: "75%" }}
       />
-      <Form.Group
-        controlId={`${name}-count`}
-        as={Row}
-        style={{ marginTop: "10px" }}
-      >
-        <Form.Label column xs="6" style={{ textAlign: "right" }}>
-          {name}
-        </Form.Label>
-        <Col xs="5" style={{ textAlign: "left" }}>
-          <Form.Control
-            type="number"
-            defaultValue={0}
-            onChange={handleChange}
+      {optionType === "scoops" ? (
+        <Form.Group
+          controlId={`${name}-scoops`}
+          as={Row}
+          style={{ marginTop: "10px" }}
+        >
+          <Form.Label column xs="6" style={{ textAlign: "right" }}>
+            {name}
+          </Form.Label>
+          <Col xs="5" style={{ textAlign: "left" }}>
+            <Form.Control
+              type="number"
+              defaultValue={0}
+              onChange={handleChange}
+            />
+          </Col>
+        </Form.Group>
+      ) : (
+        <Form.Group controlId={`${name}-toppings`}>
+          <Form.Check
+            type="checkbox"
+            onChange={(e) => {
+              updateItemCount(name, e.target.checked ? 1 : 0);
+            }}
+            label={name}
           />
-        </Col>
-      </Form.Group>
+        </Form.Group>
+      )}
     </Col>
   );
 };
