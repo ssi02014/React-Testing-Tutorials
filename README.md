@@ -58,7 +58,7 @@
 
 <br />
 
-- [Section 6 - Provider에 래핑된 컴포넌트 테스트하기](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-5.md)
+- [Section 6 - Provider에 래핑된 컴포넌트 테스트하기](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-6.md)
   - Provider(1) - 텍스트 입력란 채우기: 소계 테스트
   - Provider(2) - 테스트 설정에 Context 추가하기
   - Provider(3) - Provider Wrapper(CustomRender) 적용
