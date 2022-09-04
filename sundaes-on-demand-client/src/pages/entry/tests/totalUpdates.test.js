@@ -65,16 +65,6 @@ test("update toppings subtotal when toppings change", async () => {
 });
 
 describe("grand total", () => {
-  test("grand total starts at $0.00", () => {
-    render(<OrderEntry />);
-
-    const grandTotal = screen.getByRole("heading", {
-      name: /grand total: \$/i,
-    });
-
-    expect(grandTotal).toHaveTextContent("0.00");
-  });
-
   test("grand total updates properly if scoop is added first", async () => {
     render(<OrderEntry />);
 
@@ -87,6 +77,9 @@ describe("grand total", () => {
     const CherriesCheckbox = await screen.findByRole("checkbox", {
       name: "Cherries",
     });
+
+    // check that the grand total starts out at 0
+    expect(grandTotal).toHaveTextContent("0.00");
 
     // scoop add
     userEvent.clear(vanillaInput);

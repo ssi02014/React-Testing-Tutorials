@@ -62,3 +62,7 @@
   - Provider(1) - 텍스트 입력란 채우기: 소계 테스트
   - Provider(2) - 테스트 설정에 Context 추가하기
   - Provider(3) - Provider Wrapper(CustomRender) 적용
+  - Provider(4) - update toppings subtotal
+  - Provider(5) - 총계(Grand total)
+  - Provider(6) - act(...), Unmounted Component 에러
+  - Provider(7) - 기능 테스트는 무엇을 잡아야 하나?
