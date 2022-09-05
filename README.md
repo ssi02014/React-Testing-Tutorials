@@ -66,3 +66,9 @@
   - Provider(5) - 총계(Grand total)
   - Provider(6) - act(...), Unmounted Component 에러
   - Provider(7) - 기능 테스트는 무엇을 잡아야 하나?
+
+<br />
+
+- [Section 7 - 최종 섹션: 주문 단계](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-7.md)
+  - 최종 섹션(1) - Happy Path Test
+    - 디버깅 팁, 주요 테스트 에러와 해결책

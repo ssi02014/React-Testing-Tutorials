@@ -45,7 +45,6 @@ const Options = ({ optionType }) => {
         <AlertBanner />
       ) : (
         <>
-          <p>hi</p>
           <h2>{title}</h2>
           <p>{formatCurrency(pricePerItem[optionType])} each</p>
           <p>

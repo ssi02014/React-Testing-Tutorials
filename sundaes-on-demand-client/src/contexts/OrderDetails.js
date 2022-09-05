@@ -34,6 +34,13 @@ export const OrderDetailsProvider = (props) => {
     toppings: new Map(),
   });
 
+  const resetOrder = () => {
+    setOptionsCounts({
+      scoops: new Map(),
+      toppings: new Map(),
+    });
+  };
+
   const value = useMemo(() => {
     function updateItemCount(itemName, newItemCount, optionType) {
       const newOptionCounts = { ...optionCounts };
@@ -42,7 +49,7 @@ export const OrderDetailsProvider = (props) => {
 
       setOptionsCounts(newOptionCounts);
     }
-    return [{ ...optionCounts, totals }, updateItemCount];
+    return [{ ...optionCounts, totals }, updateItemCount, resetOrder];
   }, [optionCounts, totals]);
 
   const calculateSubtotal = (optionType, optionCounts) => {
