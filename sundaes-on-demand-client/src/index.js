@@ -5,6 +5,12 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+// import server from "./mocks/server";
+
+// 브라우저 서비스 워커 구동
+// if (process.env.NODE_ENV === "development") {
+//   server.start();
+// }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
