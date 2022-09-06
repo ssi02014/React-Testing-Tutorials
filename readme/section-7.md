@@ -38,7 +38,7 @@
 
 <br />
 
-## 테스트 코드
+## 🧑‍💻 최종 섹션(2) - orderPhase 테스트 코드
 
 ```js
 import { render, screen } from "@testing-library/react";
@@ -131,3 +131,60 @@ test("order phases for happy path", async () => {
   expect(toppingsTotal).toBeInTheDocument();
 });
 ```
+
+<br />
+
+## 🧑‍💻 최종 섹션(3) - Jest Mock(모의) 함수
+
+- Jest는 mock함수 즉 가짜 함수를 생성할 수 있도록 `jest.fn()`을 제공한다.
+- 그리고 이 mock 함수는 일반 자바스크립트 함수와 동일한 방식으로 인자를 넘겨 호출 할 수 있다.
+
+```js
+const mockFn = jest.fn();
+mockFn();
+mockFn(1);
+mockFn("a");
+mockFn([1, 2]);
+```
+
+- 위 mock 함수의 호출 결과는 모두 `undefined`이다. 어떤 값을 리턴해야할지 아직 알려주지 않았기 때문이다.
+
+```js
+mockFn.mockReturnValue("일반 테스트!");
+console.log(mockFn()); // 일반 테스트!
+```
+
+- `mockReturnValue(리턴 값)` 함수를 이용해서 가짜 함수가 어떤 값을 리턴해야할지 설정해 줄 수 있다.
+
+```js
+mockFn.mockResolvedValue("비동기 테스트!");
+mockFn().then((result) => {
+  console.log(result); // 비동기 테스트!
+});
+```
+
+- 비슷한 방식으로 `mockResolvedValue(Promise의 resolve 값)` 함수를 이용해서 가짜 비동기 함수를 만들 수 있다.
+
+```js
+mockFn.mockImplementation((name) => `I am ${name}!`);
+console.log(mockFn("Dale")); // I am Dale!
+```
+
+- 뿐만 아니라 `mockImplementation(구현 코드)` 함수를 이용하면 아예 해당 함수를 통째로 즉석해서 재구현해버릴 수도 있습니다.
+
+### mock 함수 사용 이유
+
+- 테스트를 작성할 때 mock 함수가 유용한 이유는 mock 함수는 자신이 어떻게 호출되었는지 모두 기억한다는 점이다.
+
+```js
+mockFn("a");
+mockFn(["b", "c"]);
+
+expect(mockFn).toBeCalledTimes(2);
+expect(mockFn).toBeCalledWith("a");
+expect(mockFn).toBeCalledWith(["b", "c"]);
+```
+
+- 위와 같이 mock 함수 용 설계된 Jest Matcher인 `toBeCalled` 함수를 사용하면 mock 함수가 몇번 `호출`되었고 `인자`로 무엇이 넘어왔었는지를 검증할 수 있습니다.
+
+<br />

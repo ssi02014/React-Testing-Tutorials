@@ -55,6 +55,7 @@
   - MSW(1) - Mock Service Worker와 핸들러 소개
   - MSW(2) - MSW로 스쿱 옵션 테스트하기
   - MSW(3) - MSW Error 테스트
+    - test.only/skip
 
 <br />
 
@@ -72,3 +73,5 @@
 - [Section 7 - 최종 섹션: 주문 단계](https://github.com/ssi02014/React-Testing-Tutorials/blob/master/readme/section-7.md)
   - 최종 섹션(1) - Happy Path Test
     - 디버깅 팁, 주요 테스트 에러와 해결책
+  - 최종 섹션(2) - orderPhase 테스트 코드
+  - 최종 섹션(3) - Jest Mock(모의) 함수

@@ -5,7 +5,7 @@ import {
 } from "../../../test-utils/testing-library-utils";
 import OrderEntry from "../OrderEntry";
 import { rest } from "msw";
-import { server } from "../../../mocks/server";
+import server from "../../../mocks/server";
 
 test("handles error for scoops toppings router", async () => {
   // 기존에 설정한 server handler를 오버라이딩 하는 코드 (에러 발생시키기 위함)
@@ -19,7 +19,7 @@ test("handles error for scoops toppings router", async () => {
     })
   );
 
-  render(<OrderEntry />);
+  render(<OrderEntry setOrderPhase={jest.fn()} />);
 
   // waitFor로 비동기 처리해주지 않으면 단언이 동기적으로 작동해서 오류가 발생 함
   await waitFor(async () => {

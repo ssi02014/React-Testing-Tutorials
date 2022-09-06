@@ -168,7 +168,7 @@ export const server = setupServer(...handlers);
 // src/setupTests.js
 // jest-dom때문에 jest-dom 단언을 사용할 수 있다.
 import "@testing-library/jest-dom";
-import { server } from "./mocks/server.js";
+import server from "./mocks/server.js";
 
 // 테스트를 하기 전에 항상 서버가 수신을 대기하도록 한다.
 // 들어오는 모든 네트워크 요청을 실제 네트워크가 아닌 MSW로 라우팅함을 의미한다.
@@ -283,7 +283,7 @@ test("display image for each scoop option from server", async () => {
 import { render, screen, waitFor } from "@testing-library/react";
 import OrderEntry from "../OrderEntry";
 import { rest } from "msw";
-import { server } from "../../../mocks/server";
+import server from "../../../mocks/server";
 
 test("handles error for scoops toppings router", async () => {
   // 기존에 설정한 server handler를 오버라이딩 하는 코드 (에러 발생시키기 위함)
