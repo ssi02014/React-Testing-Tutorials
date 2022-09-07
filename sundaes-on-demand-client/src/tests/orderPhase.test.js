@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
 
@@ -62,11 +62,20 @@ test("order phases for happy path", async () => {
   });
   userEvent.click(confirmOrderButton);
 
+  // Expect "Loading" to Show
+  const loading = await screen.findByText("Loading");
+  expect(loading).toBeInTheDocument();
+
   // confirm order number on confirmation page
   const thankYouHeader = await screen.findByRole("heading", {
     name: /thank you/i,
   });
   expect(thankYouHeader).toBeInTheDocument();
+
+  // Expect "Loading" has disappeared
+  // queryBy*는 요소가 DOM 내에 있지 않을 것을 expect한다.
+  const notLoading = screen.queryByText("Loading");
+  expect(notLoading).not.toBeInTheDocument();
 
   const orderNumber = await screen.findByText(/order number/i);
   expect(orderNumber).toBeInTheDocument();
