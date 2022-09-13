@@ -4,6 +4,7 @@ import {
   waitFor,
 } from "../../../test-utils/testing-library-utils";
 import OrderEntry from "../OrderEntry";
+import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
 import server from "../../../mocks/server";
 
@@ -21,11 +22,25 @@ test("handles error for scoops toppings router", async () => {
 
   render(<OrderEntry setOrderPhase={jest.fn()} />);
 
-  // waitFor로 비동기 처리해주지 않으면 단언이 동기적으로 작동해서 오류가 발생 함
-  await waitFor(async () => {
-    // axios catch를 이용하므로(비동기) find를 이용 (+ 다수의 Alert이 나와야되므로 findAllByRole을 사용)
-    const alerts = await screen.findAllByRole("alert");
-    // scoops, topping 2개의 alert이 나와야 함
-    expect(alerts).toHaveLength(2);
+  const alerts = await screen.findAllByRole("alert");
+  expect(alerts).toHaveLength(2);
+});
+
+test("disable order button if there are no scoops ordered", async () => {
+  render(<OrderEntry setOrderPhase={jest.fn()} />);
+
+  const orderButton = screen.getByRole("button", { name: /order sundae/i });
+  expect(orderButton).toBeDisabled();
+
+  const vanillaInput = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
   });
+
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "1");
+  await waitFor(() => expect(orderButton).toBeEnabled());
+
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "0");
+  await waitFor(() => expect(orderButton).toBeDisabled());
 });
