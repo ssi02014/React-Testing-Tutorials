@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 
 const OptionItem = ({ name, imagePath, optionType, updateItemCount }) => {
+  const [isValid, setIsValid] = useState(true);
   const handleChange = (event) => {
-    updateItemCount(name, event.target.value);
+    const { value } = event.target;
+    updateItemCount(name, value);
+
+    const currentValueFloat = parseFloat(value);
+
+    setIsValid(
+      0 <= currentValueFloat &&
+        currentValueFloat <= 10 &&
+        Math.floor(currentValueFloat) === currentValueFloat
+    );
   };
+
   return (
     <Col xs={12} sm={6} md={4} lg={3} style={{ textAlign: "center" }}>
       <img
@@ -28,6 +39,7 @@ const OptionItem = ({ name, imagePath, optionType, updateItemCount }) => {
               type="number"
               defaultValue={0}
               onChange={handleChange}
+              isInvalid={!isValid}
             />
           </Col>
         </Form.Group>
