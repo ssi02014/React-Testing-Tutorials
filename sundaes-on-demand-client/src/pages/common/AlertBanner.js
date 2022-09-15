@@ -1,9 +1,9 @@
 import React from "react";
 import Alert from "react-bootstrap/Alert";
 
-const AlertBanner = ({ message, variant }) => {
+const AlertBanner = ({ message = "", variant = "" }) => {
   const alertMessage =
-    message || "An unexpected error ocurred. Please try again later.";
+    message || "An unexpected error occurred. Please try again later.";
   const alertVariant = variant || "danger";
 
   return (
